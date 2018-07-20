@@ -1,7 +1,11 @@
+#!/usr/local/bin/python
+# -*- coding: utf-8 -*-
+
 from flask import Flask, request, jsonify
 from zalo.sdk.oa import ZaloOaInfo, ZaloOaClient
 import json
-import config
+from app import config
+from app.engine.main_bot import BotManager
 
 app = Flask(__name__)
 port = '5000'
@@ -11,7 +15,7 @@ zalo_oa_client = ZaloOaClient(zalo_info)
 
 @app.route('/')
 def response_user_message():
-  mess = request.args.get('message')
+  msg = request.args.get('message')
   user_id = request.args.get('fromuid')
   # User profile
   profile = zalo_oa_client.get('getprofile', {'uid': user_id})
@@ -21,9 +25,10 @@ def response_user_message():
 
   data = {
       'uid': user_id,
-      'message': 'Chào bạn ' + profile['data']['displayName']
+      'message': BotManager.reply(msg)
+      # 'message': 'Chào bạn ' + profile['data']['displayName']
   }
   params = {'data': data}
   send_text_message = zalo_oa_client.post('sendmessage/text', params)
-  return mess
+  return msg
 

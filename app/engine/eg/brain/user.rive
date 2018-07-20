@@ -1,0 +1,58 @@
+// ======================================================================
+// Học thông tin từ người dùng
+// Author: Hoàng Việt
+// Date: 7/2018
+// ======================================================================
+
+// =================================================
+// SEEK_USER_NAME
+// =================================================
+
++ @user tên là *
+- <set name=<formal>>Chào <get name>.
+- <set name=<formal>>Rất vui được gặp <get name>.
+
++ tên @user là *
+- @ @user tên là <star>
+
++ gọi @user là *
+- <set name=<formal>>Được rồi, mình sẽ gọi bạn là <get name>
+
++ @user tên là <bot name>
+- <set name=<bot name>>Trùng hợp vậy! Mình cũng tên là <get name>
+- <set name=<bot name>>Đó cũng là tên cũng mình đó!
+
++ (chào|hi|hello|xin chào)
+* <get name> != undefined => Chào <get name>
+- Chào bạn
+
+> topic seek_user_name
+	+ *
+	@ <star>{topic=random}
+
+	+ tớ không biết
+	- ơ lạ nhỉ, tên mình mà không biết{topic=random}
+< topic
+
+// =================================================
+// AGE
+// =================================================
+
+> topic seek_user_age
+	+ *
+	@ <star>{topic=random}
+
+	+ tớ không biết
+	- ơ lạ nhỉ, tuổi mình mà không biết{topic=random}
+< topic
+
++ (to|tớ) (#) (tuổi|tuoi)
+- cậu <star2> tuổi. tớ nhớ rồi
+
+// =================================================
+// LOCATION
+// =================================================
+> topic seek_user_location
+	+ *
+	@ <star>{topic=random}
+< topic
