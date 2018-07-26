@@ -13,7 +13,7 @@
 ! var fullname = Hoàng Quốc Việt
 ! var age      = 22
 ! var birthday = October 22
-! var sex      = male
+! var sex      = con trai
 ! var location = Việt Nam
 ! var city     = Hà Nội
 ! var eyes     = nâu
@@ -21,12 +21,13 @@
 ! var hairlen  = ngắn
 ! var color    = đen
 ! var band     = Cider Girl
-! var book     = Nana
+! var book     = Nana du ký
 ! var author   = Nguyễn Nhật Ánh
-! var job      = sinh viên
+! var job      = bot bán hàng
 ! var mood = normal
 ! var website  = fb.com/h2v9696
 ! global you   = bạn
+! global debug = true
 
 // Thay thế các từ đầu vào của người dùng (chuẩn hóa)
 ! sub &quot; = "
@@ -144,7 +145,7 @@
 // Set arrays
 ! array male = nam|trai|con trai|đàn ông|boy|man
 ! array female = nữ|gái|con gái|đàn bà|phụ nữ|girl|woman
-! array lol = lol lmao rofl rotfl haha hahaha
+! array lol = lol|lmao|rofl|rotfl|haha|hahaha|smile|hihi|hi hi|he he|lol|ồ hố|ha ha
 ! array colors = trắng|đen|cam|đỏ|xanh|xanh lá|vàng|xám|nâu|hồng|tím|bạc
 ! array sizes = S M L XL nhỏ lớn vừa
 ! array height = cao dài rộng dày
@@ -152,5 +153,10 @@
 ! array yes = yes yeah yep yup ya yea được ok ổn
 ! array no = no nah nope nay không k ko
 ! array i = cậu bạn mày em mi ngươi m
-! array user = tớ mình tao t ta
+! array user = tớ mình tao t ta tôi
 ! array number_ask = bao nhiêu|mấy|bn
+! array angry_words = mẹ|im đi|câm mồm|chết tiệt
+! array curse_words = dở|điên
+! array curse_words_2 = ngố|ngốc|kém|ngu|đần|dốt
+! array vulgarity_words = mẹ mày|địt|như cứt|cứt|dm|dmm|cc|ccc|fuck|đụ|lồn|loz|oc|óc chó
+! array sad_words = buồn|hu hu |huhu|khóc

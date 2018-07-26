@@ -1,9 +1,9 @@
 // Catch-All Trigger xử lý khi không match với trigger nào
 
 + *
-- ...{weight=6}
-- mình không chắc mình hiểu bạn nói gì
-- có lẽ bạn nên nói đơn giản hơn đi
-- ý bạn là gì
-- mình không hiểu bạn vừa nói gì
+- ...{weight=2}
+- Mình không chắc mình hiểu bạn nói gì
+- Có lẽ bạn nên nói đơn giản hơn đi
+- Ý bạn là gì?
+- Mình không hiểu bạn vừa nói gì
 - {@ truyện cười}

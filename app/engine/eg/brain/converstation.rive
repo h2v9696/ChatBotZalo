@@ -1,8 +1,8 @@
-// ==================================================================================================
-// A generic set of chatting responses. This set mimicks the classic Eliza bot.
+// =====================================================================
+// Quản lý hội thoại
 // Author: Hoàng Việt
 // Date: 7/2018
-// ==================================================================================================
+// =====================================================================
 
 // =================================================
 // RANDOM
@@ -12,45 +12,41 @@
     return brain(rs)
 < object
 
-+ command start
-- chào cậu<set greeting=true>
-
 // Topic finding
 + command topic finding
 - <call>topicfinding</call>
 
 // Unknown Answer
 + [*] (sao|thế nào|ai|ở đâu|là gì) [*]
-- cái đấy có thực sự quan trọng không?
-- tớ không biết, nhưng tớ sẽ search thử trên mạng
-- câu này khó quá tớ không biết nói sao
-
-+ question_mark
-- Có điều gì cậu chưa hiểu à?
+- Cái đấy có thực sự quan trọng không?
+- Mình không biết, nhưng mình sẽ search thử trên mạng
+- Câu này khó quá mình không biết nói sao
 
 // =================================================
 // GREETING_HELLO
 // =================================================
+
 + (chào|xin chào|hi|hello|hey|howdy|hola|hai|yo) [*]
 * <get greeting> == true => {@ command topic finding}
-- chào cậu<set greeting=true>
-- hi hi. chào cậu<set greeting=true>
+* <get name> != undefined => Chào <get name><set greeting=true>
+- Chào bạn<set greeting=true>
 
 // =================================================
 // GREETING WAVE
 // =================================================
+
 + này
-- ơi
+- Ơi
 
 + [*] hỏi cái [*]
-- cậu hỏi đi
+- Bạn hỏi đi
 
 // =================================================
 // GREETING_BYE
 // =================================================
 + [*] (tạm biệt|bye) [*]
-- tạm biệt. hẹn gặp lại nhé
-- chào cậu. lần khác nói tiếp nhé
+- Tạm biệt. Hẹn gặp lại
+- Chào bạn. Lần khác lại đến nhé
 
 // =================================================
 // GREETING_HRU
@@ -58,27 +54,22 @@
 ! sub khoe khong = khỏe không
 
 + (@i) [có] khỏe không
-- tớ vẫn khỏe, chat chit suốt ngày. hi hi
-
-
-+ (@i) [dạo này] thế nào
-@ cậu có khỏe không
+- Mình vẫn khỏe, chat chit suốt ngày.
 
 + khỏe không
-@ cậu có khỏe không
+@ bạn có khỏe không
 
 // =================================================
 // CONFIRM
 // =================================================
+
 + [*] (vậy hả|thật sao) [*]
-- đúng vậy{weight=2}
-- cậu không tin tớ à
+- Có thể đúng... hoặc sai{weight=2}
+- Bạn không tin mình à
 
-
-+ tôi nhớ *
-- bạn có thường xuyên nhớ <star>?
-
-// ==================================================================================================
+// =================================================
+// ELISA Mimic
+// =================================================
 + i remember *
 - Do you often think of <star>?
 - Does thinking of <star> bring anything else to mind?
