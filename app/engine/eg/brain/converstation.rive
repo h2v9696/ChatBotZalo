@@ -28,8 +28,8 @@
 
 + (chào|xin chào|hi|hello|hey|howdy|hola|hai|yo) [*]
 * <get greeting> == true => {@ command topic finding}
-* <get name> != undefined => Chào <get name><set greeting=true>
-- Chào bạn<set greeting=true>
+* <get name> != undefined => Chào <get name><set greeting=true>. Bạn muốn mình giúp gì không?
+- Chào bạn<set greeting=true>. Bạn muốn mình giúp gì không?
 
 // =================================================
 // GREETING WAVE

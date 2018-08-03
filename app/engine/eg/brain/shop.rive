@@ -1,0 +1,26 @@
+// =====================================================================
+// Bán hàng
+// Author: Hoàng Việt
+// Date: 7/2018
+// =====================================================================
+
+// =================================================
+// ASK
+// =================================================
+
++ [*] menu [*]
+- Gửi bạn menu cửa hàng:\n
+^ 1.A\n
+^ 2.B\n
+^ 3.C\n
+
+//TODO: Add item and loc to order
++ [*] ship * đến * [*]
+- <set item=<star1>><set loc=<star2>>
+^ Bạn muốn đặt <get item> đến <get loc> phải không ạ? Xác nhận lại giúp mình nhé.
+
++ [*] (đúng rồi|phải|ok|chuẩn|đúng) [*]
+- Mình hiểu rồi, bạn đợi shiper đến gửi trà nhé!
+
++ [*] cho tôi * đến * [*]
+@ ship <star1> đến <star2>
