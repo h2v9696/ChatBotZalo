@@ -27,7 +27,7 @@
 ! var mood = normal
 ! var website  = fb.com/h2v9696
 ! global you   = bạn
-! global debug = true
+! global debug = false
 
 // Thay thế các từ đầu vào của người dùng (chuẩn hóa)
 ! sub &quot; = "
@@ -142,7 +142,7 @@
 ! person cậu = tôi
 ! person m = tôi
 
-// Set arrays
+// Set arays
 ! array male = nam|trai|con trai|đàn ông|boy|man
 ! array female = nữ|gái|con gái|đàn bà|phụ nữ|girl|woman
 ! array lol = lol|lmao|rofl|rotfl|haha|hahaha|smile|hihi|hi hi|he he|lol|ồ hố|ha ha

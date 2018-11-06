@@ -5,22 +5,178 @@
 // =====================================================================
 
 // =================================================
-// ASK
+// ORDER
 // =================================================
 
-+ [*] menu [*]
++ [*] menu [*] {weight=100}
 - Gửi bạn menu cửa hàng:\n
-^ 1.A\n
-^ 2.B\n
-^ 3.C\n
+^ <call>get_products</call>
 
 //TODO: Add item and loc to order
-+ [*] ship * đến * [*]
-- <set item=<star1>><set loc=<star2>>
-^ Bạn muốn đặt <get item> đến <get loc> phải không ạ? Xác nhận lại giúp mình nhé.
++ [*] ship # * đến * [*]
+* <star1> != undefine => <set quan=<star1>><set item=<star2>><set loc=<star3>>
+^ Bạn muốn đặt <get quan> <get item> đến <get loc> phải không ạ? Xác nhận lại giúp mình nhé.
+* <star1> == undefine => <set quan=1><set item=<star2>><set loc=<star3>>
+^ Bạn muốn đặt 1 <get item> đến <get loc> phải không ạ? Xác nhận lại giúp mình nhé.
 
 + [*] (đúng rồi|phải|ok|chuẩn|đúng) [*]
+% bạn muốn đặt <get quan> <get item> đến <get loc> phải không ạ xác nhận lại giúp tôi nhé
 - Mình hiểu rồi, bạn đợi shiper đến gửi trà nhé!
 
-+ [*] cho tôi * đến * [*]
-@ ship <star1> đến <star2>
++ [*] cho [tôi] # * đến * [*]
+@ ship <star1> <star2> đến <star3>
+
+> object get_products python
+    from app import ZaloMgr
+    return ZaloMgr.get_products()
+< object
+/*
++ đặt hàng chi tiết hơn
+- Cho tôi (<số lượng> <trà sữa> <50% đường> <80% đá>) * (x lần) đến <địa chỉ>
+- Cho tôi <trà sữa> <ít đường> <nhiều đá> => thông tin bị thiếu hoặc chưa rõ cần xác nhận lại. Thiếu <địa chỉ> + xác nhận % đường hay đá.
+- Cho tôi <trà sữa> thêm <topping> đến <địa chỉ> => Thiếu lượng đường đá xác nhận lại đường đá mặc định là 50%.
+- <Xác nhận lại>
+
++ thay đổi đơn đặt trong trường hợp hết hàng hay thiếu thông tin
+- Vậy đổi cho tôi thành <topping>
+- Mặc định đường đá cũng được.
+- <Xác nhận đơn hàng cuối cùng có mã đơn hàng>
+
++ tình trạng đơn hàng
+- Cho mình hỏi tình trạng đơn hàng <abc> như thế nào rồi?
+- <Đang chuyển, đang làm, ...>
+
++ hủy đơn hàng
+- Cho mình hủy đơn hàng <abc>
+- <2 trường hợp có thể hoặc không thể> => có thể thì xác nhận lại và hủy, không thể thì báo lý do.
+
++ chọn phương thức trả tiền
+- Có nhưng phương thức thanh toán nào?
+- Mình có thể thanh toán bằng chuyển khoản <hay trực tiếp> không?
+
++ lấy thông tin cần thiết cho đơn hàng
+- <đặt hàng>
+- => Cho mình xin tên người nhận, địa chỉ và số điện thoại.
+
+//=== REAL ===//
+
++ Tôi có thể đặt món không?
+^mình ở 12BT4 X2
+^bạn có thể ship cho mình 6 kiwi nha đam đến được k ạ
+
++ Tôi có thể đặt món không?
+^Cho mình xin menu trà sữa nóng vs ạ
+
++ bạn ơi
+^ship cho mình:
+^trà xanh kiwi nha đam: 2
+^trà sữa đậu đỏ 20% đường: 1
+^trà sữa trân châu đen: 1
+^chanh leo kim quất mật ong: 1
+^12BT4 X2 đó bạn
+^số 0967813170
+
++ 1 cốc trân châu hoàng kim nha
+
++ kiwi nha dam 3 coc' (2 coc' 50% duong, 1 coc day du)
+^2 chanh leo kim quat mat ong
+^1 hong tra vai
+
++ Cho m 1 trà sữa kem cheese và 1 trà sữa bạc hà
+^2 cốc đều trân châu trắng
+^1 size à b
+
+// =================================================
+// MORE LIST
+// =================================================
+
+// === ABOUT SHOP === //
+
++ hỏi thông tin cơ bản của shop (ở đâu, mở cửa, đóng cửa)
+- Quán trà sữa này ở đâu?
+- Mấy giờ quán đóng cửa?
+- <Lấy thông tin có sẵn trả lời>
+
++ hỏi về không gian shop (như thế nào)
+- Quán có không gian thích hợp để học không?
+- Quán có được chơi boardgame có thể gây ồn không?
+- Khung cảnh quán như thế nào?
+- <Gửi ảnh hoặc chuyển người>
+
++
+
+// === ABOUT PRODUCT === //
+
++ hỏi menu
+- Cho mình xin menu với
+- Quán có những gì?
+- <Gửi menu>
+
++ hỏi menu chi tiết hơn
+- Quán có những loại trà sữa gì?
+- Quán có bán đồ ăn vặt không?
+- Quán có những topping gì?
+- Món mới của quán có gì?
+- Có những gợi ý mua hàng nào?
+- Còn <star> không?
+- <...>
+
++ hỏi cách đặt mua
+- Làm sao để đặt mua trà?
+- <...>
+
++
+
+// === DISCOUNT === //
+
++ hỏi về chương trình khuyến mãi
+- Hiện đang có những chương trình khuyến mãi nào?
+- <Lấy thông tin có sẵn>
+
++ xác nhận khi mua hàng nếu có khuyến mãi
+- Vậy nếu tôi mua <star> thì tôi sẽ được khuyến mãi <star2> đúng không?
+- <Kiểm tra và xác nhận>
+
++ thẻ thành viên
+- Nếu là thành viên thì có những ưu đãi gì không?
+- <Kiểm tra và xác nhận>
+
++ mã giảm gía
+- Làm thế nào để có mã giảm gía khi đặt hàng online?
+- Làm thế nào để dùng mã giảm gía khi đặt hàng?
+- <...>
+
++
+
+
+// === MEMBERSHIP === //
+
++ hỏi cách đăng ký
+- Làm sao để đăng ký làm thành viên qua mạng (online)?
+- Đăng ký làm thành viên như thế nào?
+- <...>
+
++ thông tin thành viên
+- Thông tin thành viên <star>
+
++
+
+// === FEEDBACK === //
+
++ tích cực
+- <cảm ơn>
+
++ tiêu cực
+- <hỏi lý do nếu chưa có nếu có rồi thì redirect>
+
++ <lý do tiêu cực>
+- <cảm ơn vì đã feedback, quán sẽ sửa lỗi>
+
+// === OTHER === //
+
++ Q&A
+- Làm sao để hủy đơn hàng?
+- Làm thế nào để tra thông tin thành viên?
+- Làm sao để đặt hàng?
+- <...>
+*/
