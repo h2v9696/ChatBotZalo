@@ -10,17 +10,21 @@ from sklearn.externals import joblib
 import os
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
+from sklearn.datasets import load_iris
+from sklearn.model_selection import cross_val_score
+
 SRCDIR = os.path.dirname(os.path.abspath(__file__))
 DATADIR = os.path.join(SRCDIR, 'Data')
-# import warnings
-# warnings.filterwarnings("ignore", category=DeprecationWarning)
-# warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 
 class TextClassificationPredict(object):
-    def __init__(self, msg = '', _isTest = False):
+    def __init__(self, msg = '', _isTest = 0):
         self.test = msg
-        self.isTest = _isTest
+        self.isTest = _isTest # 0 = no test, 1 = test with 1 sentence, 2 = test with test data
         self.confirm = 1
 
     def test_clf(self):
@@ -51,6 +55,7 @@ class TextClassificationPredict(object):
             # init model svm
             domain_model = SVMModel()
             clf = domain_model.clf.fit(df_train["feature"], df_train.target)
+            print(classification_report(df_train.target, clf.predict(df_train["feature"])))
             print('===Training data is completed! \n===Dumping model...')
             joblib.dump(clf, SRCDIR + '/clf.domain')
             print('===Dumping model is completed! ')
@@ -81,6 +86,7 @@ class TextClassificationPredict(object):
             # init model svm
             domain_model = SVMModel()
             clf = domain_model.clf.fit(df_train["feature"], df_train.target)
+            print(classification_report(df_train.target, clf.predict(df_train["feature"])))
             print('===Training data is completed! \n===Dumping model...')
             joblib.dump(clf, SRCDIR + '/clf.question_type')
             print('===Dumping model is completed! ')
@@ -110,6 +116,7 @@ class TextClassificationPredict(object):
             # init model svm
             domain_model = SVMModel()
             clf = domain_model.clf.fit(df_train["feature"], df_train.target)
+            print(classification_report(df_train.target, clf.predict(df_train["feature"])))
             print('===Training data is completed! \n===Dumping model...')
             joblib.dump(clf, SRCDIR + '/clf.attribute')
             print('===Dumping model is completed! ')
@@ -117,6 +124,44 @@ class TextClassificationPredict(object):
             # Lưu model
             clf = joblib.load(SRCDIR + '/clf.attribute')
         return clf
+
+    def process_test(self, domain_clf, question_type_clf, attr_clf):
+        read = ReadData()
+        domain_test_data = []
+        question_type_test_data = []
+        attr_test_data = []
+        print('===Process test')
+        # Tạo test data
+        data_dir = DATADIR + '/test-data/'
+        list_file = os.listdir(data_dir)
+
+        print('===Reading data...')
+
+        data_test = read.read_file(data_dir + 'domain_test.txt')
+        print('domain_test.txt')
+        for data in data_test:
+            feature = {"feature": data[1], "target": data[0]}
+            domain_test_data.append(feature)
+        data_test = read.read_file(data_dir + 'question_attr_test.txt')
+        print('question_attr_test.txt')
+        for data in data_test:
+            feature = {"feature": data[1], "target": data[0]}
+            attr_test_data.append(feature)
+        data_test = read.read_file(data_dir + 'question_type_test.txt')
+        print('question_type_test.txt')
+        for data in data_test:
+            feature = {"feature": data[1], "target": data[0]}
+            question_type_test_data.append(feature)
+        print('===Reading data is completed!')
+        df_test_domain = pd.DataFrame(domain_test_data)
+        df_test_qt = pd.DataFrame(question_type_test_data)
+        df_test_attr = pd.DataFrame(attr_test_data)
+        print(classification_report(df_test_domain.target, domain_clf.predict(df_test_domain["feature"])))
+        print("Accuracy: ", domain_clf.score(df_test_domain["feature"], df_test_domain["target"]))
+        print(classification_report(df_test_qt.target, question_type_clf.predict(df_test_qt["feature"])))
+        print("Accuracy: ", question_type_clf.score(df_test_qt["feature"], df_test_qt["target"]))
+        print(classification_report(df_test_attr.target, attr_clf.predict(df_test_attr["feature"])))
+        print("Accuracy: ", attr_clf.score(df_test_attr["feature"], df_test_attr["target"]))
 
     def get_train_data(self):
         # [0] = question type; [1] = domain; [2] = attribute
@@ -129,40 +174,45 @@ class TextClassificationPredict(object):
         index_data = 1
         data_dir = ''
 
-        test_data.append({"feature": self.test, "target": ''})
-        df_test = pd.DataFrame(test_data)
-
         clf_domain = self.process_model_domain()
         clf_qtype = self.process_model_question()
         clf_attri = self.process_model_attri()
 
-        # score = clf.score(df_test["feature"], df_test["target"])
+        if (self.isTest != 2):
+            test_data.append({"feature": self.test, "target": ''})
+            df_test = pd.DataFrame(test_data)
+            # score = clf.score(df_test["feature"], df_test["target"])
+            prediction_domain = clf_domain.predict(df_test["feature"])
+            # print 'Domain: Độ chính xác {}'.format(accuracy_score(['product'], prediction))
+            # Print predicted result
+            # print df_train.target.unique()
+            prediction_qtype = clf_qtype.predict(df_test["feature"])
+            # print prediction_qt
+            # print 'Question Type: Độ chính xác {}'.format(accuracy_score(['exists'], prediction))
+            # print score
+            prediction_attri = clf_attri.predict(df_test["feature"])
 
-        prediction_domain = clf_domain.predict(df_test["feature"])
-        # print 'Domain: Độ chính xác {}'.format(accuracy_score(['product'], prediction))
-        # Print predicted result
-        # print df_train.target.unique()
-        prediction_qtype = clf_qtype.predict(df_test["feature"])
-        # print prediction_qt
-        # print 'Question Type: Độ chính xác {}'.format(accuracy_score(['exists'], prediction))
-        # print score
-        # print clf_domain.predict_proba(df_test["feature"])
-        # print clf_qtype.predict_proba(df_test["feature"])
-        prediction_attri = clf_attri.predict(df_test["feature"])
-
-        # print classification_report(df_test.target, clf.predict(df_test["feature"]))
-        if (self.isTest):
-            print(prediction_qtype)
-            print(prediction_domain)
-            print(prediction_attri)
-            # self.confirm = input('Test tiếp (Không = 0/Có = 1)? ')
+            # print classification_report(df_test.target, clf.predict(df_test["feature"]))
+            if (self.isTest == 1):
+                print("Domain: " + prediction_domain)
+                print(round(np.amax(clf_domain.predict_proba(df_test["feature"]))*100, 2))
+                # print(round(np.amax(clf_domain.staged_predict_proba(df_test["feature"]))*100, 2))
+                print("Question type: " + prediction_qtype)
+                print(round(np.amax(clf_qtype.predict_proba(df_test["feature"]))*100, 2))
+                print("Attribute: " + prediction_attri)
+                print(round(np.amax(clf_attri.predict_proba(df_test["feature"]))*100, 2))
+                # self.confirm = input('Test tiếp (Không = 0/Có = 1)? ')
+            else:
+                intent_result.append(prediction_qtype[0]);
+                intent_result.append(prediction_domain[0]);
+                intent_result.append(prediction_attri[0]);
+                return intent_result
         else:
-            intent_result.append(prediction_qtype[0]);
-            intent_result.append(prediction_domain[0]);
-            intent_result.append(prediction_attri[0]);
-            return intent_result
+            self.process_test(clf_domain, clf_qtype, clf_attri)
+
+
 
 if __name__ == '__main__':
-    tcp = TextClassificationPredict("", True)
-    tcp.test_clf()
-    # tcp.get_train_data()
+    tcp = TextClassificationPredict("", 2)
+    # tcp.test_clf()
+    tcp.get_train_data()

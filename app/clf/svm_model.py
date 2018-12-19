@@ -7,17 +7,24 @@ from transformer import FeatureTransformer
 from sklearn.linear_model import SGDClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.svm import LinearSVC
+from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.ensemble import RandomForestClassifier
 from scipy.stats import randint as sp_randint
-
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import VotingClassifier
 class SVMModel(object):
     def __init__(self):
         self.clf = self._init_pipeline()
 
     @staticmethod
     def _init_pipeline():
+        # clfAda = AdaBoostClassifier(SVC(probability=True, kernel='linear'), n_estimators=5, learning_rate=1.0, algorithm='SAMME');
+        clfSVC = CalibratedClassifierCV(LinearSVC());
+        clfLR = LogisticRegression(solver='sag');
+        clfNB = MultinomialNB(fit_prior=True, class_prior=None);
+        clfSGD = SGDClassifier(loss='log', penalty='l2', alpha=1e-3, n_iter=5, random_state=None);
         param_dist = {"max_depth": [3, None],                  #distribution
               "n_estimators":[50,100,200,300,400,500],
               "max_features": sp_randint(1, 11),
@@ -38,11 +45,14 @@ class SVMModel(object):
             #     n_jobs=1,           #num of core
             #     verbose=0,
             #     random_state=1))
-            # ('clf', OneVsRestClassifier(LogisticRegression(solver='sag'), n_jobs=1))
-            ('clf', OneVsRestClassifier(LinearSVC(), n_jobs=1)),
-            # ('clf', OneVsRestClassifier(MultinomialNB(fit_prior=True, class_prior=None)))
-            # ("clf", MultinomialNB())#model naive bayes
-            # ("clf-svm", SGDClassifier(loss='log', penalty='l2', alpha=1e-3, n_iter=5, random_state=None))
+
+            ('clf', VotingClassifier(estimators=[('svc', clfSVC), ('lr', clfLR), ('onb', clfNB), ('sgd', clfSGD)], voting='soft', weights=[8,8,2,2])),
+            # ('clf', AdaBoostClassifier(SVC(probability=True, kernel='linear'), n_estimators=5, learning_rate=1.0, algorithm='SAMME')),
+            # ('clfSVC', CalibratedClassifierCV(OneVsRestClassifier(LinearSVC(), n_jobs=1))),
+            # ('clfLR', OneVsRestClassifier(LogisticRegression(solver='sag'), n_jobs=1)),
+            # ('clfONB', OneVsRestClassifier(MultinomialNB(fit_prior=True, class_prior=None)))
+            # ("clfNB", MultinomialNB())#model naive bayes
+            # ("clfSGD", SGDClassifier(loss='log', penalty='l2', alpha=1e-3, n_iter=5, random_state=None))
         ])
 
         return pipe_line
