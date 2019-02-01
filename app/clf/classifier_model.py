@@ -2,8 +2,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.multiclass import OneVsRestClassifier
-# from app.clf.transformer import FeatureTransformer
-from transformer import FeatureTransformer
+from app.clf.transformer import FeatureTransformer
+# from transformer import FeatureTransformer
 from sklearn.linear_model import SGDClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.svm import LinearSVC
@@ -14,7 +14,7 @@ from sklearn.ensemble import RandomForestClassifier
 from scipy.stats import randint as sp_randint
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import VotingClassifier
-class SVMModel(object):
+class ClassifierModel(object):
     def __init__(self):
         self.clf = self._init_pipeline()
 

@@ -8,13 +8,13 @@ from flask_mysqldb import MySQL
 from app import config
 
 app = Flask(__name__)
-app.config['MYSQL_USER'] = config.user
-app.config['MYSQL_PASSWORD'] = config.passwd
-app.config['MYSQL_DB'] = config.db
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
-mysql = MySQL(app)
+# app.config['MYSQL_USER'] = config.user
+# app.config['MYSQL_PASSWORD'] = config.passwd
+# app.config['MYSQL_DB'] = config.db
+# app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+# mysql = MySQL(app)
 port = '5000'
-cur = mysql.connection.cursor()
+# cur = mysql.connection.cursor()
 
 @app.route('/')
 def response_user_message():

@@ -2,16 +2,17 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 import numpy as np
-# from app.clf.svm_model import SVMModel
-# from app.clf.read_data import ReadData
-from svm_model import SVMModel
-from read_data import ReadData
+from app.clf.classifier_model import ClassifierModel
+from app.clf.read_data import ReadData
+# from classifier_model import ClassifierModel
+# from read_data import ReadData
 from sklearn.externals import joblib
 import os
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from sklearn.datasets import load_iris
 from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import train_test_split
 
 SRCDIR = os.path.dirname(os.path.abspath(__file__))
 DATADIR = os.path.join(SRCDIR, 'Data')
@@ -53,7 +54,7 @@ class TextClassificationPredict(object):
 
             df_train = pd.DataFrame(train_data)
             # init model svm
-            domain_model = SVMModel()
+            domain_model = ClassifierModel()
             clf = domain_model.clf.fit(df_train["feature"], df_train.target)
             print(classification_report(df_train.target, clf.predict(df_train["feature"])))
             print('===Training data is completed! \n===Dumping model...')
@@ -84,7 +85,7 @@ class TextClassificationPredict(object):
 
             df_train = pd.DataFrame(train_data)
             # init model svm
-            domain_model = SVMModel()
+            domain_model = ClassifierModel()
             clf = domain_model.clf.fit(df_train["feature"], df_train.target)
             print(classification_report(df_train.target, clf.predict(df_train["feature"])))
             print('===Training data is completed! \n===Dumping model...')
@@ -114,7 +115,7 @@ class TextClassificationPredict(object):
 
             df_train = pd.DataFrame(train_data)
             # init model svm
-            domain_model = SVMModel()
+            domain_model = ClassifierModel()
             clf = domain_model.clf.fit(df_train["feature"], df_train.target)
             print(classification_report(df_train.target, clf.predict(df_train["feature"])))
             print('===Training data is completed! \n===Dumping model...')
@@ -123,6 +124,45 @@ class TextClassificationPredict(object):
         else:
             # Lưu model
             clf = joblib.load(SRCDIR + '/clf.attribute')
+        return clf
+
+    def process_model_new(self, model_name):
+        print('===Process model', model_name)
+        data_test = []
+        read = ReadData()
+        # Tạo train data domain
+        if (not(os.path.exists(SRCDIR + '/clf.' + model_name))):
+            all_data = []
+            print('===Reading data...')
+            data_read = read.read_file(DATADIR + '/' + model_name + '.txt')
+            print('/' + model_name + '.txt')
+            for data in data_read:
+                    feature = {"feature": data[1], "target": data[0]}
+                    all_data.append(feature)
+            print('===Reading data is completed!')
+
+            df_data = pd.DataFrame(all_data)
+            print('===Spliting data...')
+            data_train, data_test = train_test_split(df_data, test_size=0.33, random_state=42)
+            print('===Splited data shape')
+            print(data_train.shape, data_test.shape)
+            # init model svm
+            domain_model = ClassifierModel()
+            print('===Training data...')
+            clf = domain_model.clf.fit(data_train["feature"], data_train.target)
+            # print('===Train data score')
+            # print(classification_report(data_train.target, clf.predict(data_train["feature"])))
+            print('===Training data is completed! \n===Dumping model...')
+            joblib.dump(clf, SRCDIR + '/clf.' + model_name)
+            print('===Dumping model is completed! \n===Testing model...')
+            print(classification_report(data_test.target, clf.predict(data_test["feature"])))
+            print("Accuracy: ", clf.score(data_test["feature"], data_test["target"]))
+            print('===Testing model ' + model_name + ' is completed! ')
+            print('=================================================\n')
+        else:
+            # Lưu model
+            clf = joblib.load(SRCDIR + '/clf.' + model_name)
+
         return clf
 
     def process_test(self, domain_clf, question_type_clf, attr_clf):
@@ -170,13 +210,17 @@ class TextClassificationPredict(object):
         # Tạo test data
         # data_test = read.read_file('product_test.txt')
         test_data = []
-        index_label = 0
-        index_data = 1
+        # index_label = 0
+        # index_data = 1
         data_dir = ''
-
-        clf_domain = self.process_model_domain()
-        clf_qtype = self.process_model_question()
-        clf_attri = self.process_model_attri()
+        # Old test
+        # clf_domain = self.process_model_domain()
+        # clf_qtype = self.process_model_question()
+        # clf_attri = self.process_model_attri()
+        # New function: Train and test
+        clf_domain = self.process_model_new('domain')
+        clf_qtype = self.process_model_new('q_type')
+        clf_attri = self.process_model_new('q_attr')
 
         if (self.isTest != 2):
             test_data.append({"feature": self.test, "target": ''})
