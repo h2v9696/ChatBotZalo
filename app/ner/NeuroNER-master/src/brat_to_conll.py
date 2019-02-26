@@ -28,9 +28,10 @@ def get_sentences_and_tokens_from_spacy(text, spacy_nlp):
                 continue
             # Make sure that the token text does not contain any space
             if len(token_dict['text'].split(' ')) != 1:
-                print("WARNING: the text of the token contains space character, replaced with hyphen\n\t{0}\n\t{1}".format(token_dict['text'], 
+                print("WARNING: the text of the token contains space character, replaced with hyphen\n\t{0}\n\t{1}".format(token_dict['text'],
                                                                                                                            token_dict['text'].replace(' ', '-')))
                 token_dict['text'] = token_dict['text'].replace(' ', '-')
+                # token_dict['text'] = token_dict['text'].replace(' ', ' ')
             sentence_tokens.append(token_dict)
         sentences.append(sentence_tokens)
     return sentences
@@ -59,9 +60,9 @@ def get_sentences_and_tokens_from_stanford(text, core_nlp):
                 continue
             # Make sure that the token text does not contain any space
             if len(token['text'].split(' ')) != 1:
-                print("WARNING: the text of the token contains space character, replaced with hyphen\n\t{0}\n\t{1}".format(token['text'], 
-                                                                                                                           token['text'].replace(' ', '-')))
-                token['text'] = token['text'].replace(' ', '-')
+                print("WARNING: the text of the token contains space character, replaced with hyphen\n\t{0}\n\t{1}".format(token['text'],
+                                                                                                                           token['text'].replace(' ', ' ')))
+                # token['text'] = token['text'].replace(' ', '-')
             tokens.append(token)
         sentences.append(tokens)
     return sentences
@@ -97,7 +98,7 @@ def get_entities_from_brat(text_filepath, annotation_filepath, verbose=False):
                 # add to entitys data
                 entities.append(entity)
     if verbose: print("\n\n")
-    
+
     return text, entities
 
 def check_brat_annotation_and_text_compatibility(brat_folder):
@@ -141,12 +142,12 @@ def brat_to_conll(input_folder, output_filepath, tokenizer, language):
 
         text, entities = get_entities_from_brat(text_filepath, annotation_filepath)
         entities = sorted(entities, key=lambda entity:entity["start"])
-        
+
         if tokenizer == 'spacy':
             sentences = get_sentences_and_tokens_from_spacy(text, spacy_nlp)
         elif tokenizer == 'stanford':
             sentences = get_sentences_and_tokens_from_stanford(text, core_nlp)
-        
+
         for sentence in sentences:
             inside = False
             previous_token_label = 'O'
@@ -162,7 +163,7 @@ def brat_to_conll(input_folder, output_filepath, tokenizer, language):
                         break
                     elif token['end'] < entity['start']:
                         break
-                        
+
                 if len(entities) == 0:
                     entity={'end':0}
                 if token['label'] == 'O':

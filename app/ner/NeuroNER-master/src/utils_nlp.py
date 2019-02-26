@@ -15,7 +15,8 @@ def load_tokens_from_pretrained_token_embeddings(parameters):
     for cur_line in file_input:
         count += 1
         cur_line = cur_line.strip()
-        cur_line = cur_line.split(' ')
+        # cur_line = cur_line.split(' ')
+        cur_line = cur_line.split('\t')
         if len(cur_line)==0:continue
         token=cur_line[0]
         tokens.add(token)
@@ -32,7 +33,8 @@ def load_pretrained_token_embeddings(parameters):
         count += 1
         #if count > 1000:break
         cur_line = cur_line.strip()
-        cur_line = cur_line.split(' ')
+        # cur_line = cur_line.split(' ')
+        cur_line = cur_line.split('\t')
         if len(cur_line)==0:continue
         token = cur_line[0]
         vector = np.array([float(x) for x in cur_line[1:]])
@@ -90,7 +92,7 @@ def end_current_entity(previous_label_without_bio, current_entity_length, new_la
     if current_entity_length == 1:
         new_labels[i - 1] = 'S-' + previous_label_without_bio
     else: #elif current_entity_length > 1
-        new_labels[i - 1] = 'E-' + previous_label_without_bio 
+        new_labels[i - 1] = 'E-' + previous_label_without_bio
 
 def bio_to_bioes(labels):
     previous_label_without_bio = 'O'
@@ -108,7 +110,7 @@ def bio_to_bioes(labels):
             if current_entity_length == 0:
                 new_labels[i] = 'B-' + label_without_bio
             current_entity_length += 1
-        previous_label_without_bio = label_without_bio    
+        previous_label_without_bio = label_without_bio
     end_current_entity(previous_label_without_bio, current_entity_length, new_labels, i + 1)
     return new_labels
 
@@ -126,7 +128,7 @@ def bioes_to_bio(labels):
             new_labels[i] = 'B-' + label_without_bio
         previous_label_without_bio = label_without_bio
     return new_labels
-                
+
 
 def check_bio_bioes_compatibility(labels_bio, labels_bioes):
     if labels_bioes == []:
@@ -135,7 +137,7 @@ def check_bio_bioes_compatibility(labels_bio, labels_bioes):
     flag = True
     if new_labels_bio != labels_bio:
         print("Not valid.")
-        flag = False 
+        flag = False
     del labels_bio[:]
     del labels_bioes[:]
     return flag
@@ -148,14 +150,15 @@ def check_validity_of_conll_bioes(bioes_filepath):
     labels_bioes = []
     labels_bio = []
     for line in input_conll_file:
-        split_line = line.strip().split(' ')
+        # split_line = line.strip().split(' ')
+        split_line = line.strip().split('\t')
         # New sentence
         if len(split_line) == 0 or len(split_line[0]) == 0 or '-DOCSTART-' in split_line[0]:
             if check_bio_bioes_compatibility(labels_bio, labels_bioes):
                 continue
             return False
-        label_bioes = split_line[-1]    
-        label_bio = split_line[-2]    
+        label_bioes = split_line[-1]
+        label_bio = split_line[-2]
         labels_bioes.append(label_bioes)
         labels_bio.append(label_bio)
     input_conll_file.close()
@@ -163,7 +166,7 @@ def check_validity_of_conll_bioes(bioes_filepath):
         print("Done.")
         return True
     return False
-             
+
 def output_conll_lines_with_bioes(split_lines, labels, output_conll_file):
     '''
     Helper function for convert_conll_from_bio_to_bioes
@@ -173,7 +176,8 @@ def output_conll_lines_with_bioes(split_lines, labels, output_conll_file):
     new_labels = bio_to_bioes(labels)
     assert(len(new_labels) == len(split_lines))
     for split_line, new_label in zip(split_lines, new_labels):
-        output_conll_file.write(' '.join(split_line + [new_label]) + '\n')
+        # output_conll_file.write(' '.join(split_line + [new_label]) + '\n')
+        output_conll_file.write('\t'.join(split_line + [new_label]) + '\n')
     del labels[:]
     del split_lines[:]
 
@@ -191,17 +195,18 @@ def convert_conll_from_bio_to_bioes(input_conll_filepath, output_conll_filepath)
     split_lines = []
     for line in input_conll_file:
         split_line = line.strip().split(' ')
+        # split_line = line.strip().split('\t')
         # New sentence
         if len(split_line) == 0 or len(split_line[0]) == 0 or '-DOCSTART-' in split_line[0]:
             output_conll_lines_with_bioes(split_lines, labels, output_conll_file)
             output_conll_file.write(line)
             continue
-        label = split_line[-1]    
+        label = split_line[-1]
         labels.append(label)
         split_lines.append(split_line)
     output_conll_lines_with_bioes(split_lines, labels, output_conll_file)
-    
+
     input_conll_file.close()
     output_conll_file.close()
     print("Done.")
-    
+

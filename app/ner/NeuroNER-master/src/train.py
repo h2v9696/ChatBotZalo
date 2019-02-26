@@ -64,7 +64,8 @@ def prediction_step(sess, dataset, dataset_type, model, transition_params_traine
         for prediction, token, gold_label in zip(prediction_labels, dataset.tokens[dataset_type][i], gold_labels):
             while True:
                 line = original_conll_file.readline()
-                split_line = line.strip().split(' ')
+                # split_line = line.strip().split(' ')
+                split_line = line.strip().split('\t')
                 if '-DOCSTART-' in split_line[0] or len(split_line) == 0 or len(split_line[0]) == 0:
                     continue
                 else:
@@ -72,10 +73,12 @@ def prediction_step(sess, dataset, dataset_type, model, transition_params_traine
                     if parameters['tagging_format'] == 'bioes':
                         split_line.pop()
                     gold_label_original = split_line[-1]
-                    assert(token == token_original and gold_label == gold_label_original) 
-                    break            
+                    # print(token, token_original, gold_label, gold_label_original)
+                    assert(token == token_original and gold_label == gold_label_original)
+                    break
             split_line.append(prediction)
-            output_string += ' '.join(split_line) + '\n'
+            # output_string += ' '.join(split_line) + '\n'
+            output_string += '\t'.join(split_line) + '\n'
         output_file.write(output_string+'\n')
 
         all_predictions.extend(predictions)

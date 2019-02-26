@@ -38,7 +38,7 @@ def assess_model(y_pred, y_true, labels, target_names, labels_with_o, target_nam
     xlabel = 'Predicted'
     ylabel = 'True'
     xticklabels = yticklabels = target_names_with_o
-    utils_plots.heatmap(confusion_matrix, title, xlabel, ylabel, xticklabels, yticklabels, figure_width=40, figure_height=20, correct_orientation=True, fmt="%d", 
+    utils_plots.heatmap(confusion_matrix, title, xlabel, ylabel, xticklabels, yticklabels, figure_width=40, figure_height=20, correct_orientation=True, fmt="%d",
                         remove_diagonal=True)
     plt.savefig(os.path.join(stats_graph_folder, 'confusion_matrix_for_epoch_{0:04d}_in_{1}_{2}_evaluation.{3}'.format(epoch_number, dataset_type,
                                                                                                                        evaluation_mode, parameters['plot_format'])),
@@ -248,7 +248,7 @@ def evaluate_model(results, dataset, y_pred_all, y_true_all, stats_graph_folder,
     for dataset_type in ['train', 'valid', 'test']:
         if dataset_type not in output_filepaths.keys():
             continue
-        conll_evaluation_script = os.path.join('.', 'conlleval')
+        conll_evaluation_script = os.path.join('.', 'conlleval -d \"\t\"')
         conll_output_filepath = '{0}_conll_evaluation.txt'.format(output_filepaths[dataset_type])
         shell_command = 'perl {0} < {1} > {2}'.format(conll_evaluation_script, output_filepaths[dataset_type], conll_output_filepath)
         print('shell_command: {0}'.format(shell_command))
