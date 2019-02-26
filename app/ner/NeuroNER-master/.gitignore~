@@ -6,4 +6,3 @@
 *.pydevproject
 output/*
 data/*
-trained_models/*
