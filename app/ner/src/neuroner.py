@@ -1,24 +1,24 @@
 import matplotlib
 matplotlib.use('Agg')
-import train
-import dataset as ds
+import app.ner.src.train as train
+import app.ner.src.dataset as ds
 import tensorflow as tf
 from tensorflow.contrib.tensorboard.plugins import projector
-from entity_lstm import EntityLSTM
-import utils
+from app.ner.src.entity_lstm import EntityLSTM
+import app.ner.src.utils as utils
 import os
-import conll_to_brat
+import app.ner.src.conll_to_brat as conll_to_brat
 import glob
 import codecs
 import shutil
 import time
 import copy
-import evaluate
+import app.ner.src.evaluate as evaluate
 import random
 import pickle
-import brat_to_conll
+import app.ner.src.brat_to_conll as brat_to_conll
 import numpy as np
-import utils_nlp
+import app.ner.src.utils_nlp as utils_nlp
 import distutils.util
 import configparser
 from pprint import pprint
@@ -49,8 +49,8 @@ class NeuroNER(object):
         Load parameters from the ini file if specified, take into account any command line argument, and ensure that each parameter is cast to the correct type.
         Command line arguments take precedence over parameters specified in the parameter file.
         '''
-        parameters = {'pretrained_model_folder':'../trained_models/conll_2003_en',
-                      'dataset_text_folder':'../data/conll2003/en',
+        parameters = {'pretrained_model_folder':'ner/trained_models/vi_2019-02-27',
+                      'dataset_text_folder':'ner/data/dataset',
                       'character_embedding_dimension':25,
                       'character_lstm_hidden_state_dimension':25,
                       'check_for_digits_replaced_with_zeros':True,
@@ -68,7 +68,7 @@ class NeuroNER(object):
                       'number_of_cpu_threads':8,
                       'number_of_gpus':0,
                       'optimizer':'sgd',
-                      'output_folder':'../output',
+                      'output_folder':'ner/output',
                       'patience':10,
                       'plot_format':'pdf',
                       'reload_character_embeddings':True,
@@ -78,16 +78,16 @@ class NeuroNER(object):
                       'reload_token_embeddings':True,
                       'reload_token_lstm':True,
                       'remap_unknown_tokens_to_unk':True,
-                      'spacylanguage':'en',
+                      'spacylanguage':'vi_core_news_md',
                       'tagging_format':'bioes',
                       'token_embedding_dimension':100,
                       'token_lstm_hidden_state_dimension':100,
-                      'token_pretrained_embedding_filepath':'../data/word_vectors/glove.6B.100d.txt',
+                      'token_pretrained_embedding_filepath':'',
                       'tokenizer':'spacy',
-                      'train_model':True,
+                      'train_model':False,
                       'use_character_lstm':True,
                       'use_crf':True,
-                      'use_pretrained_model':False,
+                      'use_pretrained_model':True,
                       'verbose':False}
         # If a parameter file is specified, load it
         if len(parameters_filepath) > 0:
@@ -96,6 +96,8 @@ class NeuroNER(object):
             nested_parameters = utils.convert_configparser_to_dictionary(conf_parameters)
             for k,v in nested_parameters.items():
                 parameters.update(v)
+        # print("3: ", parameters_filepath, nested_parameters)
+
         # Ensure that any arguments the specified in the command line overwrite parameters specified in the parameter file
         for k,v in arguments.items():
             if arguments[k] != arguments['argument_default_value']:
@@ -119,6 +121,7 @@ class NeuroNER(object):
         # If loading pretrained model, set the model hyperparameters according to the pretraining parameters
         if parameters['use_pretrained_model']:
             pretraining_parameters = self._load_parameters(parameters_filepath=os.path.join(parameters['pretrained_model_folder'], 'parameters.ini'), verbose=False)[0]
+            # print("1: ", pretraining_parameters)
             for name in ['use_character_lstm', 'character_embedding_dimension', 'character_lstm_hidden_state_dimension', 'token_embedding_dimension', 'token_lstm_hidden_state_dimension', 'use_crf']:
                 if parameters[name] != pretraining_parameters[name]:
                     print('WARNING: parameter {0} was overwritten from {1} to {2} to be consistent with the pretrained model'.format(name, parameters[name], pretraining_parameters[name]))
@@ -126,11 +129,11 @@ class NeuroNER(object):
         if verbose: pprint(parameters)
         # Update conf_parameters to reflect final parameter values
         conf_parameters = configparser.ConfigParser()
-        conf_parameters.read(os.path.join('test', 'test-parameters-training.ini'))
+        conf_parameters.read(os.path.join('ner/src/test', 'test-parameters-training.ini'))
         parameter_to_section = utils.get_parameter_to_section_of_configparser(conf_parameters)
+        # print("2: ", parameter_to_section)
         for k, v in parameters.items():
             conf_parameters.set(parameter_to_section[k], k, str(v))
-
         return parameters, conf_parameters
 
     def _get_valid_dataset_filepaths(self, parameters, dataset_types=['train', 'valid', 'test', 'deploy']):
@@ -442,7 +445,7 @@ class NeuroNER(object):
         self.prediction_count += 1
 
         if self.prediction_count == 1:
-            self.parameters['dataset_text_folder'] = os.path.join('..', 'data', 'temp')
+            self.parameters['dataset_text_folder'] = os.path.join('ner', 'data', 'temp')
             self.stats_graph_folder, _ = self._create_stats_graph_folder(self.parameters)
 
         # Update the deploy folder, file, and dataset
@@ -475,7 +478,7 @@ class NeuroNER(object):
         # Print and output result
         text_filepath = os.path.join(self.stats_graph_folder, 'brat', 'deploy', os.path.basename(dataset_brat_deploy_filepath))
         annotation_filepath = os.path.join(self.stats_graph_folder, 'brat', 'deploy', '{0}.ann'.format(utils.get_basename_without_extension(dataset_brat_deploy_filepath)))
-        text2, entities = brat_to_conll.get_entities_from_brat(text_filepath, annotation_filepath, verbose=True)
+        text2, entities = brat_to_conll.get_entities_from_brat(text_filepath, annotation_filepath, verbose=False)
         assert(text == text2)
         return entities
 

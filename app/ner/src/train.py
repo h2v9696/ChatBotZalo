@@ -2,11 +2,11 @@ import os
 import tensorflow as tf
 import numpy as np
 import sklearn.metrics
-from evaluate import remap_labels
+from app.ner.src.evaluate import remap_labels
 import pickle
-import utils_tf
+import app.ner.src.utils_tf
 import codecs
-import utils_nlp
+import app.ner.src.utils_nlp as utils_nlp
 #from tensorflow.python.tools.inspect_checkpoint import print_tensors_in_checkpoint_file
 
 def train_step(sess, dataset, sequence_number, model, parameters):
@@ -72,8 +72,10 @@ def prediction_step(sess, dataset, dataset_type, model, transition_params_traine
                     if parameters['tagging_format'] == 'bioes':
                         split_line.pop()
                     gold_label_original = split_line[-1]
-                    assert(token == token_original and gold_label == gold_label_original) 
-                    break            
+                    if not (token == token_original and gold_label == gold_label_original):
+                        print(token, token_original, gold_label, gold_label_original)
+                    assert(token == token_original and gold_label == gold_label_original)
+                    break
             split_line.append(prediction)
             output_string += ' '.join(split_line) + '\n'
         output_file.write(output_string+'\n')
@@ -86,7 +88,7 @@ def prediction_step(sess, dataset, dataset_type, model, transition_params_traine
 
     if dataset_type != 'deploy':
         if parameters['main_evaluation_mode'] == 'conll':
-            conll_evaluation_script = os.path.join('.', 'conlleval')
+            conll_evaluation_script = os.path.join('ner', 'src', 'conlleval')
             conll_output_filepath = '{0}_conll_evaluation.txt'.format(output_filepath)
             shell_command = 'perl {0} < {1} > {2}'.format(conll_evaluation_script, output_filepath, conll_output_filepath)
             os.system(shell_command)

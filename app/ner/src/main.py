@@ -10,7 +10,7 @@ import os
 import argparse
 from argparse import RawTextHelpFormatter
 import sys
-from neuroner import NeuroNER
+from app.ner.src.neuroner import NeuroNER
 from distutils import util
 
 import warnings
@@ -23,7 +23,7 @@ def load_parameters(parameters_filepath, arguments={}, verbose=True):
     Command line arguments take precedence over parameters specified in the parameter file.
     '''
     parameters = {'pretrained_model_folder':'../trained_models/conll_2003_en',
-                  'dataset_text_folder':'../data/conll2003/en',
+                  'dataset_text_folder':'ner/data/conll2003/vi',
                   'character_embedding_dimension':25,
                   'character_lstm_hidden_state_dimension':25,
                   'check_for_digits_replaced_with_zeros':True,
@@ -36,11 +36,11 @@ def load_parameters(parameters_filepath, arguments={}, verbose=True):
                   'learning_rate':0.005,
                   'load_only_pretrained_token_embeddings':False,
                   'main_evaluation_mode':'conll',
-                  'maximum_number_of_epochs':100,
+                  'maximum_number_of_epochs':5,
                   'number_of_cpu_threads':8,
                   'number_of_gpus':0,
                   'optimizer':'sgd',
-                  'output_folder':'../output',
+                  'output_folder':'ner/output',
                   'patience':10,
                   'plot_format':'pdf',
                   'reload_character_embeddings':True,
@@ -54,7 +54,7 @@ def load_parameters(parameters_filepath, arguments={}, verbose=True):
                   'tagging_format':'bioes',
                   'token_embedding_dimension':100,
                   'token_lstm_hidden_state_dimension':100,
-                  'token_pretrained_embedding_filepath':'../data/word_vectors/glove.6B.100d.txt',
+                  'token_pretrained_embedding_filepath':'',
                   'tokenizer':'spacy',
                   'train_model':True,
                   'use_character_lstm':True,
@@ -179,7 +179,7 @@ def parse_arguments(arguments=None):
         arguments the arguments, optionally given as argument
     '''
     parser = argparse.ArgumentParser(description='''NeuroNER CLI''', formatter_class=RawTextHelpFormatter)
-    parser.add_argument('--parameters_filepath', required=False, default=os.path.join('.','parameters.ini'), help='The parameters file')
+    parser.add_argument('--parameters_filepath', required=False, default=os.path.join('ner','src','parameters.ini'), help='The parameters file')
 
     argument_default_value = 'argument_default_dummy_value_please_ignore_d41d8cd98f00b204e9800998ecf8427e'
     parser.add_argument('--character_embedding_dimension', required=False, default=argument_default_value, help='')

@@ -3,7 +3,7 @@ import os
 import glob
 import codecs
 import spacy
-import utils_nlp
+import app.ner.src.utils_nlp as utils_nlp
 import json
 from pycorenlp import StanfordCoreNLP
 

@@ -14,7 +14,8 @@ def reply():
   user_id = request.args.get('fromuid')
   data = {
       'uid': user_id,
-      'message': BotManager.reply(msg.lower())
+      'message': BotManager.reply(msg)
+      # 'message': BotManager.reply(msg.lower())
       # 'message': 'Chào bạn ' + profile['data']['displayName']
   }
   params = {'data': data}
