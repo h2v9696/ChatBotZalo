@@ -3,7 +3,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask
-from app import ZaloMgr
+from app.ZaloMgr import ZaloAPI
 from flask_mysqldb import MySQL
 from app import config
 
@@ -18,4 +18,9 @@ port = '5000'
 
 @app.route('/')
 def response_user_message():
-  return ZaloMgr.reply();
+  zaloAPI = ZaloAPI()
+  return zaloAPI.reply();
+
+# @app.route('/', methods=['GET', 'POST'])
+# def response_user_message():
+#   return "OK";

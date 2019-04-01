@@ -12,12 +12,16 @@
 - Gửi bạn menu cửa hàng:\n
 ^ <call>get_products</call>
 
++ [*] món gì [*] {weight=100}
+- Gửi bạn menu cửa hàng:\n
+^ <call>get_products</call>
+
 //TODO: Add item and loc to order
-+ [*] ship # * đến * [*]
-* <star1> != undefine => <set quan=<star1>><set item=<star2>><set loc=<star3>>
-^ Bạn muốn đặt <get quan> <get item> đến <get loc> phải không ạ? Xác nhận lại giúp mình nhé.
-* <star1> == undefine => <set quan=1><set item=<star2>><set loc=<star3>>
-^ Bạn muốn đặt 1 <get item> đến <get loc> phải không ạ? Xác nhận lại giúp mình nhé.
+//+ [*] ship # * đến * [*]
+//* <star1> != undefine => <set quan=<star1>><set item=<star2>><set loc=<star3>>
+//^ Bạn muốn đặt <get quan> <get item> đến <get loc> phải không ạ? Xác nhận lại giúp mình nhé.
+//* <star1> == undefine => <set quan=1><set item=<star2>><set loc=<star3>>
+//^ Bạn muốn đặt 1 <get item> đến <get loc> phải không ạ? Xác nhận lại giúp mình nhé.
 
 + [*] (đúng rồi|phải|ok|chuẩn|đúng) [*]
 % bạn muốn đặt <get quan> <get item> đến <get loc> phải không ạ xác nhận lại giúp tôi nhé
@@ -27,8 +31,8 @@
 @ ship <star1> <star2> đến <star3>
 
 > object get_products python
-    from app import ZaloMgr
-    return ZaloMgr.get_products()
+    from app.ZaloMgr import ZaloAPI
+    return ZaloAPI.get_products()
 < object
 /*
 + đặt hàng chi tiết hơn

@@ -168,6 +168,7 @@ def output_conll_lines_with_bioes(split_lines, labels, output_conll_file):
     '''
     Helper function for convert_conll_from_bio_to_bioes
     '''
+    # print(split_lines, labels)
     if labels == []:
         return
     new_labels = bio_to_bioes(labels)

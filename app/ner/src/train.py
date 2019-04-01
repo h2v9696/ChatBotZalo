@@ -73,7 +73,7 @@ def prediction_step(sess, dataset, dataset_type, model, transition_params_traine
                         split_line.pop()
                     gold_label_original = split_line[-1]
                     if not (token == token_original and gold_label == gold_label_original):
-                        print(token, token_original, gold_label, gold_label_original)
+                        print(line, token, token_original, gold_label, gold_label_original)
                     assert(token == token_original and gold_label == gold_label_original)
                     break
             split_line.append(prediction)

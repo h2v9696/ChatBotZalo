@@ -7,14 +7,14 @@
 // =================================================
 // RANDOM
 // =================================================
-> object topicfinding python
-    from app.core.engine import brain
-    return brain(rs)
-< object
+// > object topicfinding python
+//     from app.core.engine import brain
+//     return brain(rs)
+// < object
 
 // Topic finding
-+ command topic finding
-- <call>topicfinding</call>
+// + command topic finding
+// - <call>topicfinding</call>
 
 // Unknown Answer
 + [*] (sao|thế nào|ai|ở đâu|là gì) [*]
@@ -26,7 +26,7 @@
 // GREETING_HELLO
 // =================================================
 
-+ (chào|xin chào|hi|hello|hey|howdy|hola|hai|yo) [*]
++ (chào|xin chào|hi|hello|hey|howdy|hola|yo) [*]
 * <get greeting> == true => {@ command topic finding}
 * <get name> != undefined => Chào <get name><set greeting=true>. Bạn muốn mình giúp gì không?
 - Chào bạn<set greeting=true>. Bạn muốn mình giúp gì không?
