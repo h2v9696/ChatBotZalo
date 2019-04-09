@@ -9,12 +9,12 @@
 // =================================================
 
 + [*] menu [*] {weight=100}
-- Gửi bạn menu cửa hàng:\n
-^ <call>get_products</call>
+- Gửi bạn menu cửa hàng\n
+^ <call>get_menu</call>
 
 + [*] món gì [*] {weight=100}
 - Gửi bạn menu cửa hàng:\n
-^ <call>get_products</call>
+^ <call>get_menu</call>
 
 //TODO: Add item and loc to order
 //+ [*] ship # * đến * [*]
@@ -27,12 +27,12 @@
 % bạn muốn đặt <get quan> <get item> đến <get loc> phải không ạ xác nhận lại giúp tôi nhé
 - Mình hiểu rồi, bạn đợi shiper đến gửi trà nhé!
 
-+ [*] cho [tôi] # * đến * [*]
-@ ship <star1> <star2> đến <star3>
+//+ [*] cho [tôi] # * đến * [*]
+//@ ship <star1> <star2> đến <star3>
 
-> object get_products python
-    from app.ZaloMgr import ZaloAPI
-    return ZaloAPI.get_products()
+> object get_menu python
+    import app.zalo_api as zaloAPI
+    return zaloAPI.get_products(True)
 < object
 /*
 + đặt hàng chi tiết hơn

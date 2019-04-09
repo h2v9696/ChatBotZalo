@@ -3,11 +3,13 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask
-from app.ZaloMgr import ZaloAPI
+from app.dialog_manager import DialogManager
 from flask_mysqldb import MySQL
 from app import config
 
 app = Flask(__name__)
+dialogManager = DialogManager()
+
 # app.config['MYSQL_USER'] = config.user
 # app.config['MYSQL_PASSWORD'] = config.passwd
 # app.config['MYSQL_DB'] = config.db
@@ -18,8 +20,7 @@ port = '5000'
 
 @app.route('/')
 def response_user_message():
-  zaloAPI = ZaloAPI()
-  return zaloAPI.reply();
+  return dialogManager.reply();
 
 # @app.route('/', methods=['GET', 'POST'])
 # def response_user_message():
