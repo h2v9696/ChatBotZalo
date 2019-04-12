@@ -31,7 +31,7 @@
 //@ ship <star1> <star2> đến <star3>
 
 > object get_menu python
-    import app.zalo_api as zaloAPI
+    import app.api.zalo_api as zaloAPI
     return zaloAPI.get_products(True)
 < object
 /*

@@ -4,18 +4,33 @@ from owlready2 import *
 onto = get_ontology("../../Drink.owl")
 onto.load()
 import time
+from datetime import datetime
 
-# Test convert time
-# unix_timestamp  = int("1486731896687")
-# utc_time = time.ctime(1554803360945/1000)
-# local_time = time.localtime(unix_timestamp)
-# print(time.strftime("%Y-%m-%d %H:%M:%S", local_time))
-
-# from datetime import datetime
-# readable = datetime.fromtimestamp(1554803360945/1000)
-# print(readable.strftime('%H:%M %d/%m/%Y'))
 
 if __name__ == '__main__':
+  #District convert
+  DISTRICTS = {
+    'ba đình': 1, 'hoàn kiếm': 2, 'tây hồ': 3, 'long biên': 4, 'cầu giấy': 5, 'đống đa': 6, 'hai bà trưng': 7,
+    'hoàng mai': 8, 'thanh xuân': 9, 'sóc sơn': 16, 'đông anh': 17, 'gia lâm': 18, 'nam từ liêm': 19, 'thanh trì': 20,
+    'bắc từ liêm': 21, 'mê linh': 250, 'hà đông': 268, 'sơn tây': 269, 'ba vì': 271, 'phúc thọ': 272, 'đan phượng': 273,
+    'hoài đức': 274, 'quốc oai': 275, 'thạch thất': 276, 'chương mỹ': 277, 'thanh oai': 278, 'thường tín': 279,
+    'phú xuyên': 280, 'ứng hòa': 281, 'mỹ đức': 282
+  }
+  address = "huyện đông anh"
+  for d in DISTRICTS:
+    if d in address.lower():
+      print(DISTRICTS[d])
+      break
+
+  # Test convert time
+  # unix_timestamp  = int("1486731896687")
+  # utc_time = time.ctime(1554803360945/1000)
+  # local_time = time.localtime(unix_timestamp)
+  # print(time.strftime("%Y-%m-%d %h:%M:%S", local_time))
+
+  readable = datetime.fromtimestamp(1554803360945/1000)
+  print(readable.strftime('%H:%M %d/%m/%Y'))
+
     # print(list(onto.classes()))
     # print(onto.search(iri = "*trà*"))
     # print(onto["trà_sữa"].name)

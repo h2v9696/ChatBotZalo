@@ -1,10 +1,12 @@
-import app.zalo_api as zaloAPI
+import app.api.zalo_api as zaloAPI
+import app.utils.utils_zalo as utils_zalo
 from app.engine.main_bot import BotManager
 from rivescript import RiveScript
 import requests
 from flask import request, jsonify
 import json
 from datetime import datetime
+
 
 class DialogManager:
   def __init__(self):
@@ -28,11 +30,20 @@ class DialogManager:
         reply = self.simple_dialog(user_id, intents, entities)
       else:
         reply = response
+      print(zaloAPI.reply_user_text(user_id, reply))
     if event == "order":
       order = json.loads(request.args.get('order'))
       time = datetime.fromtimestamp(int(order['createdTime'])/1000)
-      reply = "Mã đơn hàng: " + order['orderCode'] + "\nTổng thanh toán: " + str(int(order['price'])) + "đ\nNgày giờ đặt hàng: " + time.strftime('%H:%M %d/%m/%Y') + "\nCảm ơn bạn đã đặt hàng, chúc bạn ngon miệng!"
-    return zaloAPI.reply_user_text(user_id, reply)
+      reply = "Mã đơn hàng: " + order['orderCode'].upper() + "\nTổng thanh toán: " + str(int(order['price'])) + " đ\nNgày giờ đặt hàng: " + time.strftime('%H:%M %d/%m/%Y') + "\nCảm ơn bạn đã đặt hàng, chúc bạn ngon miệng!"
+      # Reply with link
+      links = [{
+        'link': 'https://shop.zalo.me/profile/order_history?status=0',
+        'linktitle': 'Đặt hàng thành công!',
+        'linkdes': reply,
+        'linkthumb': order['productImage']
+      }]
+      print(zaloAPI.reply_user_link(user_id, links))
+    return 'OK';
 
   def simple_dialog(self, user_id, intents, entities):
     result = "Xin lỗi mình không trả lời được tin nhắn"
@@ -48,7 +59,7 @@ class DialogManager:
           'phone': '',
           'user_id': userProfile['data']['userId'],
           'address': '',
-          'district': 2,
+          'district': 1,
           'city': 1
       },
       'order_items': [],
@@ -71,7 +82,7 @@ class DialogManager:
                 'id': ''
               }
             }
-            # Get product 'QUANTITY' if dont have 'QUANTITY' before that then dafault = 1
+            # Get product 'QUANTITY' if dont have 'QUANTITY' before that then default = 1
             if (index != 0):
               if (entities[index - 1]['type'] == 'QUANTITY'):
                 item['quantity'] = int(entities[index - 1]['text'])
@@ -93,7 +104,7 @@ class DialogManager:
                         or entities[index + 1]['type'] == 'ADJUSTICE'
                         or entities[index + 1]['type'] == 'ADJUSTSUGAR'):
                 if entities[index + 1]['type'] == 'SIZE':
-                  item['variation']['id'] = zaloAPI.convert_id_size(entities[index + 1]['text'])
+                  item['variation']['id'] = utils_zalo.convert_id_size(id_or_size = entities[index + 1]['text'])
                 if entities[index + 1]['type'] == 'TOPPING':
                   extra_note.append("Topping: " + entities[index + 1]['text'].replace("_", " "))
                   # Order Topping
@@ -115,7 +126,12 @@ class DialogManager:
             order['order_items'].append(item)
 
           if (e['type'] == 'LOCATION'):
-            address.append(e['text'].replace('_', ' '))
+            district = utils_zalo.get_district_id(address = e['text'].replace('_', ' '))
+            # If cant get district id then let it default and append to address else change default district
+            if (district == 0):
+              address.append(e['text'].replace('_', ' '))
+            else:
+              order['customer']['district'] = district
 
           if (e['type'] == 'PHONE'):
             order['customer']['phone'] = e['text']
@@ -123,12 +139,14 @@ class DialogManager:
           index += 1
 
       order['customer']['address'] = ' - '.join(address)
+
+      all_products = zaloAPI.get_products(False)
       # Get product id to complete order
       for item in order['order_items']:
-        product = zaloAPI.get_product(item['product_name'])
+        product = utils_zalo.get_product(all_products, product_name = item['product_name'])
         if 'variations' in product:
           for v in product['variations']:
-            if item['variation']['id'] == '' and zaloAPI.convert_id_size(v['attributes'][0]) == 'm':
+            if item['variation']['id'] == '' and utils_zalo.convert_id_size(id_or_size = v['attributes'][0]) == 'm':
               item['variation']['id'] = v['id']
               break
             if v['attributes'][0] == item['variation']['id']:
@@ -143,3 +161,4 @@ class DialogManager:
       else:
         result = "Mình đã tạo order rồi nhé, mời bạn kiểm tra."
     return result
+

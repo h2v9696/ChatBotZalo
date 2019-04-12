@@ -3,7 +3,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask
-from app.dialog_manager import DialogManager
+from app.dialog.dialog_manager import DialogManager
 from flask_mysqldb import MySQL
 from app import config
 
