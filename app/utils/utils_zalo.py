@@ -53,3 +53,9 @@ def get_district_id(address: str):
     if d in address.lower():
       return DISTRICTS[d]
   return 0
+
+def get_district_from_id(id: int):
+  for d in DISTRICTS:
+    if DISTRICTS[d] == id:
+      return d
+  return None

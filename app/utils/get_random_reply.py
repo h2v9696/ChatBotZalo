@@ -10,7 +10,7 @@ def get_random_reply(replies: list):
     :param replies: list
     :return:
     """
-    if reply:
-        index = random.randint(0, len(reply) - 1)
-        return reply[index]
+    if replies:
+        index = random.randint(0, len(replies) - 1)
+        return replies[index]
     return ""

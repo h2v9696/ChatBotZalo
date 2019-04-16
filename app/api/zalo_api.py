@@ -24,7 +24,8 @@ def reply_user_text(user_id, msg: str):
   }
   params = {'data': data}
   send_text_message = zalo_oa_client.post('sendmessage/text', params)
-  return msg
+  print("\nReply user by text: ", send_text_message)
+  # return msg
 
 def reply_user_link(user_id, links: list):
   data = {
@@ -35,9 +36,45 @@ def reply_user_link(user_id, links: list):
       'data': data
   }
   send_link_message = zalo_oa_client.post('sendmessage/links', params)
-  print(send_link_message)
+  print("\nReply user by link: ", send_link_message)
+  # return links
 
-  return links
+def reply_user_select_yes_no(user_id, msg: str, sub_msg: str, img_url: str):
+  message_info = {
+    'recipient': {
+      'user_id': user_id
+    },
+    'message': {
+      'attachment': {
+        'type': "template",
+        'payload': {
+          "template_type": "list",
+          "elements": [{
+            "title": msg,
+            "subtitle": sub_msg,
+            "image_url": img_url
+          }],
+          "buttons": [
+           {
+              "title": "Xác nhận",
+              "payload": "Xác nhận",
+              "type": "oa.query.show"
+           },
+           {
+              "title": "Hủy",
+              "payload": "Hủy",
+              "type": "oa.query.show"
+           }
+          ],
+        }
+      }
+    }
+  }
+  response = requests.post(url= API_URL +"oa/message?access_token=" + ACCESS_TOKEN,
+    json=message_info)
+  print("\nReply user by select: ", response.json())
+  return response.json()
+  # return links
 
 def get_user_profile(user_id):
   return zalo_oa_client.get('getprofile', {'uid': user_id})

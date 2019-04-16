@@ -20,7 +20,8 @@ port = '5000'
 
 @app.route('/')
 def response_user_message():
-  return dialogManager.reply();
+  dialogManager.reply();
+  return 'OK';
 
 # @app.route('/', methods=['GET', 'POST'])
 # def response_user_message():
