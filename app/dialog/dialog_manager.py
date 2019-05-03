@@ -7,8 +7,11 @@ from flask import request, jsonify
 from datetime import datetime
 from app.dialog.dialog_utils import *
 from app.dialog.handle_message import HandleMessage
+from app.utils.singleton import SingletonMeta
+from app.utils.sentences import THANKS_FOR_ORDERED
+from app.utils.sentence_utils import *
 
-class DialogManager:
+class DialogManager(metaclass = SingletonMeta):
   def __init__(self):
     self.DIALOGS = []
     self.handle_message = HandleMessage()
@@ -28,16 +31,18 @@ class DialogManager:
       current_dialog = create_dialog(user_id)
       self.DIALOGS.append(current_dialog)
 
-    print("Current DIALOGS: ", self.DIALOGS)
-
+    # print("\nCurrent DIALOGS: ", json.dumps(self.DIALOGS, indent = 2, ensure_ascii = False))
+    # Xử lý event zalo gửi về
     if event == "sendmsg":
-    # if isinstance(user_msg, str):
-      current_dialog = self.handle_message.handle_message(user_msg, dialog = current_dialog)
-      if current_dialog["responses"]["reply_type"] == "reply_text":
-        zaloAPI.reply_user_text(user_id, current_dialog["responses"]["reply"])
-      elif current_dialog["responses"]["reply_type"] == "reply_select":
-        zaloAPI.reply_user_select_yes_no(user_id, current_dialog["responses"]["reply"], current_dialog["responses"]["sub_reply"], current_dialog["responses"]["image_url"])
-      # elif current_dialog["responses"]["reply_type"] == "reply_link":
+      if user_msg[0] != '#':
+        current_dialog = self.handle_message.handle_message(user_msg, dialog = current_dialog)
+        print("\nOutput dialog: ", json.dumps(current_dialog, indent = 2, ensure_ascii = False))
+
+        if current_dialog["responses"]["reply_type"] == "reply_text":
+          zaloAPI.reply_user_text(user_id, current_dialog["responses"]["reply"])
+        elif current_dialog["responses"]["reply_type"] == "reply_select":
+          zaloAPI.reply_user_select_yes_no(user_id, current_dialog["responses"]["reply"], current_dialog["responses"]["sub_reply"], current_dialog["responses"]["image_url"])
+        # elif current_dialog["responses"]["reply_type"] == "reply_link":
 
     if event == "order":
       order = json.loads(request.args.get('order'))
@@ -51,4 +56,4 @@ class DialogManager:
         'linkthumb': order['productImage']
       }]
       zaloAPI.reply_user_link(user_id, links)
-      zaloAPI.reply_user_text(user_id,  "Cảm ơn bạn đã đặt hàng, chúc bạn ngon miệng!")
+      zaloAPI.reply_user_text(user_id, get_random_reply(replies = THANKS_FOR_ORDERED))

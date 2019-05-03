@@ -1,13 +1,13 @@
 ! version = 2.0
 
 // Đừng lặp lại
-+ <input>
-* <input1> == <input6> => Mình sẽ không nói chuyện với bạn nữa.{topic=annoying}
-* <input1> == <input5> => Lằng nhằng quá. <env you> có thể dừng được không?
-* <input1> == <input4> => Bạn làm mình đau đầu quá
-* <input1> == <input3> => Tại sao <env you> cứ nói thế nhỉ
-* <input1> == <input2> => Đấy, <env you> lại vừa nói lại!
-- Bạn vừa nói thế rồi mà
+// <input>
+//* <input1> == <input6> => Mình sẽ không nói chuyện với bạn nữa.{topic=annoying}
+//* <input1> == <input5> => Lằng nhằng quá. <env you> có thể dừng được không?
+//* <input1> == <input4> => Bạn làm mình đau đầu quá
+//* <input1> == <input3> => Tại sao <env you> cứ nói thế nhỉ
+//* <input1> == <input2> => Đấy, <env you> lại vừa nói lại!
+//- Bạn vừa nói thế rồi mà
 
 // Đừng nhại bot
  + <reply>

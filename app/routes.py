@@ -2,7 +2,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from flask import Flask
+from flask import Flask, request, jsonify
 from app.dialog.dialog_manager import DialogManager
 from flask_mysqldb import MySQL
 from app import config
@@ -18,10 +18,13 @@ dialogManager = DialogManager()
 port = '5000'
 # cur = mysql.connection.cursor()
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def response_user_message():
-  dialogManager.reply();
-  return 'OK';
+  if request.method == 'POST':
+    return 'OK';
+  else:
+    dialogManager.reply();
+    return 'OK';
 
 # @app.route('/', methods=['GET', 'POST'])
 # def response_user_message():

@@ -17,10 +17,10 @@
 // - <call>topicfinding</call>
 
 // Unknown Answer
-+ [*] (sao|thế nào|ai|ở đâu|là gì) [*]
-- Cái đấy có thực sự quan trọng không?
-- Mình không biết, nhưng mình sẽ search thử trên mạng
-- Câu này khó quá mình không biết nói sao
+// + [*] (sao|thế nào|ai|ở đâu|là gì) [*]
+// - Cái đấy có thực sự quan trọng không?
+// - Mình không biết, nhưng mình sẽ search thử trên mạng
+// - Câu này khó quá mình không biết nói sao
 
 // =================================================
 // GREETING_HELLO
@@ -66,6 +66,13 @@
 + [*] (vậy hả|thật sao) [*]
 - Có thể đúng... hoặc sai{weight=2}
 - Bạn không tin mình à
+
+// =================================================
+// TKS
+// =================================================
+
++ [*] (cảm ơn|tks|thanks) [*]
+- Không có gì! đây là nghĩa vụ của mình mà :3
 
 // =================================================
 // ELISA Mimic

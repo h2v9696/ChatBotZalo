@@ -1,5 +1,10 @@
 START_STATE = "begin"
 ORDERING_STATE = "order_product_ing"
+ORDERING_STATE_ADD = "order_product_ing_add"
+ORDERING_STATE_SWAP = "order_product_ing_swap"
+ORDERING_STATE_DEC = "order_product_ing_dec"
 ORDERED_STATE = "order_product_confirm"
+ORDERING_STATE_NOTE = "order_product_add_note"
 
 ORDER_INTENT = "order_product"
+EXIST_INTENT = "exist_product"

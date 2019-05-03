@@ -1,8 +1,10 @@
 from app.dialog.handle_detail import HandleDetail
 from app.utils.sentences import OTHER
-from app.utils.get_random_reply import get_random_reply
+from app.utils.sentence_utils import *
 from app.dialog.dialog_utils import *
-from app.dialog.const import START_STATE, ORDERED_STATE, ORDERING_STATE
+from app.dialog.const import START_STATE, ORDERED_STATE, ORDERING_STATE, \
+                                                ORDERING_STATE_ADD, ORDERING_STATE_SWAP, ORDERING_STATE_DEC, \
+                                                ORDERING_STATE_NOTE
 
 class HandleState:
   def __init__(self):
@@ -20,6 +22,11 @@ class HandleState:
         #order context
         ORDERING_STATE: self.__order_product,
         ORDERED_STATE: self.__order_product_confirm,
+        ORDERING_STATE_ADD: self.__order_product_confirm,
+        ORDERING_STATE_SWAP: self.__order_product_confirm,
+        ORDERING_STATE_DEC: self.__order_product_confirm,
+        ORDERING_STATE_NOTE: self.__ordering_add_note,
+
 
         #begin
         "begin": self.__begin
@@ -62,4 +69,15 @@ class HandleState:
     """
 
     dialog = self.handle_detail.order_product_confirm(dialog = dialog, state = state)
+    return dialog
+
+  def __ordering_add_note(self, state: str, dialog: dict):
+    """
+    handle order_product by state (in a intent context)
+    :param state:
+    :param dialog:
+    :return dialog:
+    """
+
+    dialog = self.handle_detail.add_more_extra_note(dialog = dialog, state = state)
     return dialog

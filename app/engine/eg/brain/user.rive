@@ -8,11 +8,11 @@
 // USER_NAME
 // =================================================
 
-+ [*] tôi [tên] là *
++ tôi [tên] là *
 - <set name=<formal>>Chào <get name>.
 - <set name=<formal>>Rất vui được gặp <get name>.
 
-+ [*] tôi [tên] là <bot name>
++ tôi [tên] là <bot name>
 - <set name=<bot name>>Trùng hợp vậy! Mình cũng tên là <get name>
 - <set name=<bot name>>Đó cũng là tên cũng mình đó!
 

@@ -8,39 +8,99 @@
 // ORDER
 // =================================================
 
-+ [*] menu [*] {weight=100}
+// MENU
+
++ [*] (xin|xem) [*] menu [*] {weight=100}
 - Gửi bạn menu cửa hàng\n
 ^ <call>get_menu</call>
 
-+ [*] món gì [*] {weight=100}
-- Gửi bạn menu cửa hàng:\n
-^ <call>get_menu</call>
++ [*] (xin|xem) menu [*] {weight=100}
+@ xin cái menu
 
-//TODO: Add item and loc to order
-//+ [*] ship # * đến * [*]
-//* <star1> != undefine => <set quan=<star1>><set item=<star2>><set loc=<star3>>
-//^ Bạn muốn đặt <get quan> <get item> đến <get loc> phải không ạ? Xác nhận lại giúp mình nhé.
-//* <star1> == undefine => <set quan=1><set item=<star2>><set loc=<star3>>
-//^ Bạn muốn đặt 1 <get item> đến <get loc> phải không ạ? Xác nhận lại giúp mình nhé.
++ [*] có những món gì [*] {weight=100}
+@ xin cái menu
 
-+ [*] (đúng rồi|phải|ok|chuẩn|đúng) [*]
-% bạn muốn đặt <get quan> <get item> đến <get loc> phải không ạ xác nhận lại giúp tôi nhé
-- Mình hiểu rồi, bạn đợi shiper đến gửi trà nhé!
++ [*] có những gì [*]
+@ xin cái menu
 
-//+ [*] cho [tôi] # * đến * [*]
-//@ ship <star1> <star2> đến <star3>
++ [*] có [những] [loại] trà gì [*]
+@ xin cái menu
+
++ [*] có [những] [loại] topping gì [*]
+@ xin cái menu
 
 > object get_menu python
     import app.api.zalo_api as zaloAPI
     return zaloAPI.get_products(True)
 < object
-/*
-+ đặt hàng chi tiết hơn
-- Cho tôi (<số lượng> <trà sữa> <50% đường> <80% đá>) * (x lần) đến <địa chỉ>
-- Cho tôi <trà sữa> <ít đường> <nhiều đá> => thông tin bị thiếu hoặc chưa rõ cần xác nhận lại. Thiếu <địa chỉ> + xác nhận % đường hay đá.
-- Cho tôi <trà sữa> thêm <topping> đến <địa chỉ> => Thiếu lượng đường đá xác nhận lại đường đá mặc định là 50%.
-- <Xác nhận lại>
 
++ [*] có món gì mới [*] {weight=100}
+- Gửi bạn những món mới cửa hàng:\n
+^ <call>get_new_products</call>
+
++ [*] [có] món mới [là] gì [*]
+@ có món gì mới
+
+> object get_new_products python
+    import app.api.zalo_api as zaloAPI
+    return zaloAPI.get_new_products(limit = 5)
+< object
+
++ [*] món [gì] (ngon|nổi bật|bán chạy) [*]
+- Gửi bạn những món mình recommend nha:\n
+^ <call>get_best_products</call>
+
++ [*] có những món [gì] [nào] (ngon|nổi bật|bán chạy) [*]
+@ món ngon
+
++ [*] (gợi ý|recommend|giới thiệu) [cho] tôi vài món [*]
+@ món ngon
+
+> object get_best_products python
+    import app.api.zalo_api as zaloAPI
+    return zaloAPI.get_best_products(limit = 5)
+< object
+
+
+// ORDER?
+
++ [*] có thể (đặt hàng|order) được không [*]
+- Bạn có thể đặt hàng bằng cách chat trực tiếp với mình nha.
+
+
++ [*] (làm sao|làm thế nào) để (đặt hàng|order) [nhỉ] [*]
+@ có thể đặt hàng được không
+
++ [*] (đặt hàng|order) (kiểu gì|thế nào|như thế nào) [nhỉ] [*]
+@ có thể đặt hàng được không
+
+// SALE
+
++ [*] có khuyến (mại|mãi) gì không [*]
+- Bên mình đang có chương trình giảm giá ngày khai trương và những sản phẩm trên đây được giảm giá 20% nha\n
+^ <call>get_sale_products</call>
+
++ [*] có giảm giá gì không [*]
+@ có khuyến mãi gì không
+
++ [*] có [*] giảm giá gì không [*]
+@ có khuyến mãi gì không
+
++ [*] có [*] khuyến (mại|mãi) gì không [*]
+@ có khuyến mãi gì không
+
+> object get_sale_products python
+    import app.api.zalo_api as zaloAPI
+    return zaloAPI.get_sale_products()
+< object
+
+// SHOP INFOR
+
+// Q & A
+
+
+
+/*
 + thay đổi đơn đặt trong trường hợp hết hàng hay thiếu thông tin
 - Vậy đổi cho tôi thành <topping>
 - Mặc định đường đá cũng được.
@@ -54,7 +114,7 @@
 - Cho mình hủy đơn hàng <abc>
 - <2 trường hợp có thể hoặc không thể> => có thể thì xác nhận lại và hủy, không thể thì báo lý do.
 
-+ chọn phương thức trả tiền
++ chọn phương thức trả tiền (chắc chịu)
 - Có nhưng phương thức thanh toán nào?
 - Mình có thể thanh toán bằng chuyển khoản <hay trực tiếp> không?
 
@@ -180,7 +240,5 @@
 
 + Q&A
 - Làm sao để hủy đơn hàng?
-- Làm thế nào để tra thông tin thành viên?
-- Làm sao để đặt hàng?
 - <...>
 */

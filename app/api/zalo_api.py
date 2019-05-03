@@ -2,7 +2,7 @@ from zalo.sdk.oa import ZaloOaInfo, ZaloOaClient
 from zalo.sdk.store import ZaloStoreClient
 from zalo.sdk.ZaloBaseClient import ZaloBaseClient
 import json
-from app.config import OAID, SECRET_KEY, ACCESS_TOKEN, API_URL
+from app.config import OAID, SECRET_KEY, ACCESS_TOKEN, API_URL, FOOD_API_URL
 import app.utils.utils_zalo as utils_zalo
 from flask import request, jsonify
 import requests
@@ -58,6 +58,21 @@ def reply_user_select_yes_no(user_id, msg: str, sub_msg: str, img_url: str):
            {
               "title": "Xác nhận",
               "payload": "Xác nhận",
+              "type": "oa.query.show"
+           },
+           {
+              "title": "Đổi món",
+              "payload": "Đổi",
+              "type": "oa.query.show"
+           },
+           {
+              "title": "Thêm món",
+              "payload": "Thêm",
+              "type": "oa.query.show"
+           },
+           {
+              "title": "Xóa món",
+              "payload": "Xóa",
               "type": "oa.query.show"
            },
            {
@@ -130,3 +145,44 @@ def get_products(isGetMenu: bool = True):
 
   return all_products
 
+def get_new_products(limit: int):
+  user_id, msg, event = receive_user_text()
+
+  all_products = get_products(False)
+  new_products = utils_zalo.sort_new_products(all_products, limit)
+  result = "Món mới cập nhật:\n"
+  index = 1
+  for p in new_products:
+    result += utils_zalo.print_product(index = index, products = p)
+    index += 1
+
+  reply_user_text(user_id, result)
+  return "Mời bạn chọn món!"
+
+def get_best_products(limit: int):
+  user_id, msg, event = receive_user_text()
+
+  all_products = get_products(False)
+  best_products = utils_zalo.sort_quan_product(all_products, limit)
+  result = "Món bán chạy:\n"
+  index = 1
+  for p in best_products:
+    result += utils_zalo.print_product(index = index, products = p)
+    index += 1
+
+  reply_user_text(user_id, result)
+  return "Mời bạn chọn món!"
+
+def get_sale_products():
+  user_id, msg, event = receive_user_text()
+
+  all_products = get_products(False)
+  sale_products = utils_zalo.get_sale_products(all_products)
+  result = "Món được giảm giá:\n"
+  index = 1
+  for p in sale_products:
+    result += utils_zalo.print_product(index = index, products = p, sale = p['sale'])
+    index += 1
+
+  reply_user_text(user_id, result)
+  return "Mời bạn chọn món!"

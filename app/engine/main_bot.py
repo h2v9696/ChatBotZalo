@@ -2,48 +2,37 @@ import re
 from app.clf.text_classifier_sklearn import TextClassificationPredict
 from app.ner.src.neuroner import NeuroNER
 
+EXCEPTION_WORD = ("chanh",)
 # nn = NeuroNER(parameters_filepath = "ner/src/parameters.ini")
 
 class BotManager:
     def __init__(self, _isTrain = False):
-      self.ner = None
       self.ner = NeuroNER(parameters_filepath = "ner/src/parameters.ini",
                                         train_model = _isTrain,
                                         use_pretrained_model = not _isTrain,
-                                        pretrained_model_folder = "ner/trained_models/vi_2019-03-31")
+                                        pretrained_model_folder = "ner/trained_models/vi_2019-04-22")
       self.isTrain = _isTrain
 
     # Get intent and NER
     def bot_process(self, msg):
-      # result = 'Intent:\n\t'
       intents = self.getIntent(msg)
-      # intents = TextClassificationPredict(msg).get_train_data()
-      # s = ', '.join(intents)
-      # result += s + '\n'
+
       # pre-process for ner
       msg = self.preProcessLoc(msg.lower())
       numbers = []
       numbers, msg = self.preProcessNumber(msg)
-      # print(numbers, msg)
+      # print (numbers, msg)
 
+      msg = self.fix_spacy_exception_after(msg)
+      # print(numbers, msg)
       entities = self.getNER(msg)
-      # entities = nn.predict(text=msg)
-      # result += "NER:\n"
-      count = 0
-      for e in entities:
-        if (count < len(numbers)):
-          if ("number" in e['text']):
-            e['text'] = e['text'].replace('number', numbers[count])
-            count += 1
-          elif ("phone" in e['text']):
-            while len(numbers[count]) <= 9:
-              count += 1
-            e['text'] = e['text'].replace('phone', numbers[count])
-            count += 1
-        # fail
-        # s = '\t' + e['text'] + ' = ' + e['type'] + '\n'
-        # result += s
-      # print(entities)
+      # Change number and phone back to it's original
+      for number in numbers:
+        for e in entities:
+          if(e['start'] == number['start']):
+            e['text'] = e['text'].replace(e['text'], number['word'])
+            break
+
       return intents, entities
 
     def getIntent(self, msg):
@@ -68,24 +57,51 @@ class BotManager:
 
     def preProcessNumber(self, msg):
       #tiền xử lý
-      msg = msg.replace("%", " %")
-      msg = msg.replace("số điện thoại", "sdt")
+      msg = self.fix_spacy_exception(msg)
       words = msg.split(' ')
       numbers = []
       processed_msg = []
-      for word in msg.split(' '):
+      start = 0
+      for  i, word in enumerate(words):
         if (word.isnumeric()):
-          numbers.append(word)
+          number = {
+            'start': start,
+            'word': word
+          }
+          numbers.append(number)
           if (len(word) > 9):
             processed_msg.append("phone")
+            start += 5
           else:
             processed_msg.append("number")
+            start += 6
         else:
           processed_msg.append(word)
+          start += len(word)
+          # if (word in EXCEPTION_WORD):
+          #   start += 2
+        start += 1 #space
       return numbers, ' '.join(processed_msg)
 
-      # for word in msg.split(' '):
-      #   if (word.isnumeric()):
-      #     numbers.append(word)
-      # processed_msg = re.sub(r"\b\d+\b", "number", msg)
-      # return numbers, processed_msg
+    def fix_spacy_exception(self, msg):
+      msg = msg.replace("%", " %")
+      msg = msg.replace(",", " ,")
+      msg = msg.replace("số điện thoại", "sdt")
+      msg = msg.replace("l nhé", "l")
+      msg = msg.replace("l đi", "l")
+      msg = msg.replace("chanh nhé", "chanh")
+      msg = msg.replace("chanh thạch", "chanh , thạch")
+      msg = msg.replace("chanh cỡ", "chanh , cỡ")
+      msg = msg.replace("chanh loại", "chanh , loại")
+      msg = msg.replace("chanh đi", "chanh")
+      msg = msg.replace("chanh thôi", "chanh")
+      msg = msg.replace("chanh size", "chanh , size")
+      msg = msg.replace("cẩm thạch", "cẩm , thạch")
+      msg = msg.replace("l vậy", "l")
+      msg = msg.replace("l thạch", "l , thạch")
+      return msg
+
+    def fix_spacy_exception_after(self, msg):
+      msg = msg.replace("chanh number", "chanh , number")
+      return msg
+
