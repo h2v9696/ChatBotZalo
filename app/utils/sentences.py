@@ -1,6 +1,7 @@
 THANKS = (
     'Cảm ơn bạn đã chọn ViTea, chúc bạn ngon miệng!',
     'ViTea xin cảm ơn ạ.',
+    'Cảm ơn bạn, mong bạn có nhiều trải nghiệm tuyệt vời hơn với cửa hàng nhé.',
 )
 OTHER = (
     "Xin lỗi, mình chưa hiểu ý của bạn nên bạn có thể nói rõ hơn được không?",
@@ -71,8 +72,20 @@ ADD_MORE_NOTE_RESPONSE = (
 )
 
 SORRY_CAUSE_PRODUCT_OUT_STOCK = (
-    "Xin lỗi bạn, mình sẽ cập nhật sớm nhất có thể, bạn vui lòng chọn món khác nha.",
+    "Xin lỗi bạn, mình sẽ cập nhật sớm nhất có thể, bạn vui lòng chọn món khác nhé.",
 )
+
+SORRY_FOR_BAD_REPORT = (
+    "Xin lỗi bạn vì trải nghiệm này, mình sẽ phản ánh lại cho chủ quán nhé.",
+    "Xin lỗi bạn, mình sẽ phản ánh lại cho chủ quán sớm nhất có thể. :((",
+    "Cảm ơn bạn đã góp ý, mình sẽ phản ánh lại cho chủ quán để giúp bạn có một trải nghiệm tốt hơn. :((",
+)
+
+CALL_BOSS = (
+    "Mình sẽ để lại cho chủ quán trả lời nhé.",
+    "Để mình gọi chủ quán giải đáp cho bạn nhé.",
+)
+
 # Pattern in sentence
 CONFIRM = (
     "xác nhận",
@@ -121,4 +134,32 @@ WRONG = (
     'không phải',
     "sao lại",
     "nhầm",
+)
+
+NOT_BAD = (
+    'rất ngon',
+    'ngon',
+    'tạm ngon',
+    'tốt',
+    'cũng được',
+    'tuyệt vời',
+    'khá được',
+    'tàm tạm',
+    'bình thường',
+    'hài lòng',
+)
+
+BAD = (
+    'tệ',
+    'chán',
+    'không ngon',
+    'không tốt',
+    'dở',
+    'chán ngắt',
+    'nước trắng',
+    'gắt',
+    'chả ngon',
+    'nhạt nhẽo',
+    'không hài lòng',
+    'vớ vẩn',
 )

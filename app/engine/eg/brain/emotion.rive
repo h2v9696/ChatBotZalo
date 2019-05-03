@@ -50,7 +50,7 @@
 - Mình vẫn đang học hỏi dần để giúp đỡ mọi người nha
 
 + [*] @curse_words [*]
-@ @curse_words
+@ dở
 
 // =================================================
 // BOREDOM
@@ -58,7 +58,7 @@
 
 + [*] (chán|nản) [*]
 - Ơ, mình đang nói chuyện với bạn mà
-- Đang nói chuyện vui, sao mà chán?
+- Đang nói chuyện vui, sao bạn lại chán vậy?
 
 // =================================================
 // APOLOGY
@@ -75,7 +75,7 @@
 
 + [*] @vulgarity_words [*]
 - Bạn dùng từ cho cẩn thận nha chỗ văn minh
-- Mình đi mách mẹ bạn{weight=10}
+- Mình đi mách mẹ bạn {weight=10}
 
 // =================================================
 // SAD
@@ -83,8 +83,6 @@
 
 + [*] @sad_words [*]
 - Bạn đừng buồn, mình luôn ở đây trò chuyện cùng bạn
-- ĐKM, VCL\n
-^ Đừng khóc mà, vui cười lên :D
 - Mình sẽ cố hết sức giúp đỡ bạn mà đừng buồn.
 
 // =================================================
@@ -92,4 +90,4 @@
 // =================================================
 
 + [*] (cô đơn) [*]
-- Có mình ở đây mà
+- Có mình ở đây mà, bạn có thể trò chuyện cùng mình.

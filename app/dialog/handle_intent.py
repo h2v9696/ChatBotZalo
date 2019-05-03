@@ -2,7 +2,7 @@ from app.dialog.handle_detail import HandleDetail
 from app.utils.sentences import OTHER
 from app.utils.sentence_utils import *
 from app.dialog.dialog_utils import *
-from app.dialog.const import ORDER_INTENT, EXIST_INTENT
+from app.dialog.const import ORDER_INTENT, EXIST_INTENT, SENTIMENT_INTENT
 
 class HandleIntent:
   def __init__(self):
@@ -19,6 +19,7 @@ class HandleIntent:
       functions = {
         ORDER_INTENT: self.__order_product,
         EXIST_INTENT: self.__exist_product,
+        SENTIMENT_INTENT: self.__handle_sentiment,
       }
       if (_intent in functions):
         return functions[_intent](intent = _intent, dialog = _dialog)
@@ -54,4 +55,15 @@ class HandleIntent:
     """
 
     dialog = self.handle_detail.exist_product(dialog = dialog, state = (intent + "_ing"))
+    return dialog
+
+  def __handle_sentiment(self, intent: str, dialog: dict):
+    """
+    handle sentiment by intent
+    :param intent:
+    :param dialog:
+    :return:
+    """
+
+    dialog = self.handle_detail.handle_sentiment(dialog = dialog, state = (intent + "_ing"))
     return dialog

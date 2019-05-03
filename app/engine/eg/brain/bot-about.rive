@@ -25,7 +25,7 @@
 @ bạn tên gì
 
 + (bạn là ai|ai đấy)
-- Mình là <bot name>. mình hỗ trợ cửa hàng này làm ăn đó.
+- Mình là <bot name>. Mình đang hỗ trợ cửa hàng này bạn hàng đó.
 - bạn có thể gọi mình là <bot name>. mình sống trên internet và đang là trợ lý của cửa hàng này.
 
 + [*] (@i) là ai [?] [*]
@@ -81,13 +81,13 @@
 // =================================================
 
 + hoàng việt là ai
-- Hoàng Việt là người đã tạo ra mình
+- Hoàng Việt là người đã tạo ra mình, ngoài ra còn được cô Hương hỗ trợ rất nhiều.
 
 + có biết (*) hoàng việt không [?]
 @ việt là ai
 
 + [*] tác giả [*] ai [*]
-- Mình tự học mỗi ngày, nhưng anh Hoàng Việt đã chỉ bảo mình rất nhiều
+- Mình tự học mỗi ngày, nhưng Hoàng Việt và cô Hương đã chỉ bảo mình rất nhiều.
 
 + [*] ai [*] tác giả [*]
 @ tác giả là ai
@@ -158,3 +158,12 @@
 
 + [*] tác giả bạn thích [*]
 - <bot author>.
+
++ [*] bạn có (thông minh|giỏi) bằng <star> [không] [*]
+- Mình làm sao mà kém dăm ba <star> được.\n
+^ Nhưng dạo này nhiều <star> cũng thông minh ghê lắm :D
+
++ [*] bạn có biết hát không [*] {weight=10}
+- Mình hát không hay bạn lại đánh cho không trượt cái nào mất :))\n
+^ Nên mình đọc lời bài hát thôi nha\n
+^ @ hát

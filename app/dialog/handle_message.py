@@ -3,7 +3,7 @@ from rivescript import RiveScript
 from app.dialog.dialog_utils import *
 from app.dialog.handle_intent import HandleIntent
 from app.dialog.handle_state import HandleState
-from app.dialog.const import START_STATE, ORDER_INTENT, ORDERING_STATE, EXIST_INTENT
+from app.dialog.const import START_STATE, ORDER_INTENT, ORDERING_STATE, EXIST_INTENT, SENTIMENT_INTENT
 import json
 import app.utils.utils_zalo as utils_zalo
 from app.utils.sentences import WAIT_PROCESS_ORDER
@@ -91,10 +91,12 @@ class HandleMessage:
     question_type = intents[0]
     domain = intents[1]
     question_attr = intents[2]
-    if (question_type == "order" and (domain == "product" or domain == "ship")) :
+    if (question_type == "order" and (domain == "product" or domain == "ship")):
       return ORDER_INTENT
-    if (question_type == "exists" and domain == "product") :
+    if (question_type == "exists" and domain == "product"):
       return EXIST_INTENT
+    if (question_type == "sentiment"):
+      return SENTIMENT_INTENT
     return None
 
   def convert_entities(self, entities):

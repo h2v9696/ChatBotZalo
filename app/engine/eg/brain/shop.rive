@@ -14,10 +14,10 @@
 - Gửi bạn menu cửa hàng\n
 ^ <call>get_menu</call>
 
-+ [*] (xin|xem) menu [*] {weight=100}
++ [*] (xin|xem) menu [*]
 @ xin cái menu
 
-+ [*] có những món gì [*] {weight=100}
++ [*] có những món gì [*]
 @ xin cái menu
 
 + [*] có những gì [*]
@@ -47,7 +47,7 @@
 < object
 
 + [*] món [gì] (ngon|nổi bật|bán chạy) [*]
-- Gửi bạn những món mình recommend nha:\n
+- Gửi bạn những món mình recommend nhé:\n
 ^ <call>get_best_products</call>
 
 + [*] có những món [gì] [nào] (ngon|nổi bật|bán chạy) [*]
@@ -61,32 +61,24 @@
     return zaloAPI.get_best_products(limit = 5)
 < object
 
-
 // ORDER?
 
-+ [*] có thể (đặt hàng|order) được không [*]
++ [*] có thể @order được không [*]
 - Bạn có thể đặt hàng bằng cách chat trực tiếp với mình nha.
 
-
-+ [*] (làm sao|làm thế nào) để (đặt hàng|order) [nhỉ] [*]
++ [*] @how [để] @order [nhỉ] [*]
 @ có thể đặt hàng được không
 
-+ [*] (đặt hàng|order) (kiểu gì|thế nào|như thế nào) [nhỉ] [*]
++ [*] @order @how [nhỉ] [*]
 @ có thể đặt hàng được không
 
 // SALE
 
-+ [*] có khuyến (mại|mãi) gì không [*]
-- Bên mình đang có chương trình giảm giá ngày khai trương và những sản phẩm trên đây được giảm giá 20% nha\n
++ [*] có @sale gì không [*]
+- Bên mình đang có chương trình giảm giá ngày khai trương và những sản phẩm trên đây được giảm giá 20% nhé\n
 ^ <call>get_sale_products</call>
 
-+ [*] có giảm giá gì không [*]
-@ có khuyến mãi gì không
-
-+ [*] có [*] giảm giá gì không [*]
-@ có khuyến mãi gì không
-
-+ [*] có [*] khuyến (mại|mãi) gì không [*]
++ [*] có [*] @sale gì không [*]
 @ có khuyến mãi gì không
 
 > object get_sale_products python
@@ -96,11 +88,89 @@
 
 // SHOP INFOR
 
++ [*] @shop ở (đâu|chỗ nào) [*]
+- Shop mình mở tại gia chưa có mở quán, trà shop mình làm ngon như nhà làm luôn :D
+
++ [*] (không gian|cảnh quan) shop [như] thế nào [*]
+@ shop ở đâu
+
++ [*] @shop [*] ở (đâu|chỗ nào) [*]
+@ shop ở đâu
+
++ [*] @shop (đóng|mở) cửa [đến] (khi nào|bao giờ) [*]
+- Shop mình ship trà 24/7 luôn nha. Bạn có thể đặt hàng bất cứ lúc nào!
+
++ [*] @shop (khi nào|bao giờ) nghỉ ship [*]
+@ shop mở cửa khi nào
+
++ [*] bây giờ @order được không [*]
+@ shop mở cửa khi nào
+
++ [*] (bao giờ|khi nào) có thể @order [*]
+@ shop mở cửa khi nào
+
++ [*] (mấy giờ|bao giờ) @shop (mở cửa|đóng cửa|hoạt động) [*]
+@ shop mở cửa khi nào
+
++ [*] (số điện thoại|sđt|sdt|số) của @shop [là] gì [*]
+- Số điện thoại của shop mình là: 0385895817 nhé.\n
+^ Bạn có thể phản ánh trực tiếp với chủ quán ở đây.
+
++ [*] cho [*] xin (số điện thoại|sđt|sdt|số) của @shop [*]
+@ sđt của shop là gì
+
++ [*] có ship đến <star> không [*]
+* <star> != hà nội => Shop mình chỉ nhận những đơn hàng ở Hà Nội thôi nha.
+- Có chứ, bên mình free ship với những đơn hàng trong Hà Nội nha.
+
 // Q & A
 
++ [*] (thành viên|member) [*]
+- Bên mình chưa có làm thẻ thành viên, nhưng có thể sẽ có trong tương lai.\n
+^ Bạn hãy quan tâm để biết nhiều thông tin hơn nhé.
 
++ [*] @how [để] (thay đổi|đổi) (đơn hàng|order) [*]
+- Khi đã đặt hàng thành công thì bạn chỉ có thể hủy đơn hàng để đặt hàng lại nha.
 
-/*
++ [*] (thay đổi|đổi) (đơn hàng|order) @how [*]
+@ làm thế nào để thay đổi order
+
++ [*] @how [để] (hủy|bỏ) (đơn hàng|order) [*]
+- Bạn có thể tìm lại tin nhắn tạo đơn hàng thành công bên trên.\n
+^ Sau đó nhớ mã đơn hàng và mở đường link trong tin nhắn đó.\n
+^ Tiếp đến bạn có thể tìm đơn hàng theo mã đơn hàng > Xem chi tiết > Hủy đơn hàng để hủy đơn hàng nhé.
+
++ [*] (hủy|bỏ) (đơn hàng|order) @how [*]
+@ làm thế nào để hủy đơn hàng
+
++ [*] (hủy|bỏ) (đơn hàng|order) [*]
+@ làm thế nào để hủy đơn hàng
+
++ [*] @how [để] (theo dõi|xem) [lại] (đơn hàng|order) [*]
+- Bạn có thể tìm lại tin nhắn tạo đơn hàng thành công bên trên.\n
+^ Sau đó nhớ mã đơn hàng và mở đường link trong tin nhắn đó.\n
+^ Tiếp đến bạn có thể tìm đơn hàng theo mã đơn hàng > Xem chi tiết để xem lại đơn hàng nhé.
+
++ [*] (theo dõi|xem) [lại] (đơn hàng|order) @how [*]
+@ làm thế nào để theo dõi đơn hàng
+
++ [*] (theo dõi|xem) [lại] (đơn hàng|order) [*]
+@ làm thế nào để theo dõi đơn hàng
+
++ [*] tình trạng (đơn hàng|order) [*]
+@ làm thế nào để theo dõi đơn hàng
+
++ [*] @how [để] (trả tiền|thanh toán) [*]
+- Bên mình chỉ nhận chuyển tiền trực tiếp thôi nha.
+
++ [*] (trả tiền|thanh toán) @how [*]
+@ làm thế nào để trả tiền
+
++ [*] phương thức (trả tiền|thanh toán) [*]
+@ làm thế nào để trả tiền
+
+/* List section
+
 + thay đổi đơn đặt trong trường hợp hết hàng hay thiếu thông tin
 - Vậy đổi cho tôi thành <topping>
 - Mặc định đường đá cũng được.

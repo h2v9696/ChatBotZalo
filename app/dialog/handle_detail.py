@@ -9,7 +9,7 @@ from app.utils.sentences import CONFIRM, REFUSE, CHANGE, ADD, DEC, SWAP, ASK_FOR
   ASK_FOR_CHANGE_INFO, ASK_FOR_ADD_INFO, WAIT_FIX_ORDER, CANCELED_ORDER, \
   ASK_CAUSE_WRONG_PHONE, ASK_CAUSE_NO_PRODUCT, ASK_FOR_CONFIRM, ASK_FOR_DEL_INFO, \
   PRODUCT_NOT_IN_ORDER, ASK_FOR_MORE_NOTE, GET_REFUSE, ADD_MORE_NOTE_RESPONSE, \
-  SORRY_CAUSE_PRODUCT_OUT_STOCK
+  SORRY_CAUSE_PRODUCT_OUT_STOCK, BAD, NOT_BAD, SORRY_FOR_BAD_REPORT, CALL_BOSS, THANKS
 from app.utils.sentence_utils import *
 import json
 
@@ -246,6 +246,23 @@ class HandleDetail:
     dialog = set_response(dialog = dialog, response = response)
     return dialog
 
+  def handle_sentiment(self, dialog: dict, state: str):
+    reply = ""
+
+    if check_sentence_in_group(sentence = dialog["snips"]["sentence"], group = BAD):
+      reply = get_random_reply(replies = SORRY_FOR_BAD_REPORT)
+    elif check_sentence_in_group(sentence = dialog["snips"]["sentence"], group = NOT_BAD):
+      reply = get_random_reply(replies = THANKS)
+    else:
+      reply = get_random_reply(replies = CALL_BOSS)
+
+    dialog = set_state(dialog = dialog, state = START_STATE)
+    response = {
+      "reply_type": "reply_text",
+      "reply": reply
+    }
+    dialog = set_response(dialog = dialog, response = response)
+    return dialog
 
 # private section
   def __handle_error_phone(self, dialog: dict, state: str):
@@ -321,6 +338,8 @@ class HandleDetail:
           if (index < len(entities) - 1):
             i = index + 1
             while (entities[i]['parent'] == e['value']):
+              if entities[i]['label'] == 'QUANTITY' and entities[index - 1]['value'].isnumeric():
+                item['quantity'] = int(entities[index - 1]['value'])
               if entities[i]['label'] == 'SIZE':
                 item['variation']['id'] = utils_zalo.convert_id_size(id_or_size = entities[i]['value'])
               if entities[i]['label'] == 'TOPPING':

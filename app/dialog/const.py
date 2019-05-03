@@ -8,3 +8,4 @@ ORDERING_STATE_NOTE = "order_product_add_note"
 
 ORDER_INTENT = "order_product"
 EXIST_INTENT = "exist_product"
+SENTIMENT_INTENT = "sentiment"

@@ -27,9 +27,10 @@
 // =================================================
 
 + (chào|xin chào|hi|hello|hey|howdy|hola|yo) [*]
-* <get greeting> == true => {@ command topic finding}
 * <get name> != undefined => Chào <get name><set greeting=true>. Bạn muốn mình giúp gì không?
 - Chào bạn<set greeting=true>. Bạn muốn mình giúp gì không?
+- Chào mừng bạn đến ViTea. Mình là bot của cửa hàng.\n
+^ Mình có thể giúp bạn được gì không?
 
 // =================================================
 // GREETING WAVE
@@ -39,7 +40,7 @@
 - Ơi
 
 + [*] hỏi cái [*]
-- Bạn hỏi đi
+- Mình có thể giúp bạn được gì không?
 
 // =================================================
 // GREETING_BYE
@@ -54,7 +55,7 @@
 ! sub khoe khong = khỏe không
 
 + (@i) [có] khỏe không
-- Mình vẫn khỏe, chat chit suốt ngày.
+- Mình vẫn khỏe, vẫn giúp đỡ mọi người suốt ngày.
 
 + khỏe không
 @ bạn có khỏe không
@@ -65,7 +66,7 @@
 
 + [*] (vậy hả|thật sao) [*]
 - Có thể đúng... hoặc sai{weight=2}
-- Bạn không tin mình à
+- Thật đó
 
 // =================================================
 // TKS

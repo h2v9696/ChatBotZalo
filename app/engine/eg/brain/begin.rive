@@ -161,3 +161,7 @@
 ! array curse_words_2 = ngố|ngốc|kém|ngu|đần|dốt
 ! array vulgarity_words = mẹ mày|địt|như cứt|cứt|dm|dmm|cc|ccc|fuck|đụ|lồn|loz|oc|óc chó
 ! array sad_words = buồn|hu hu |huhu|khóc
+! array shop = shop|quán|cửa hàng
+! array how = thế nào|như thế nào|làm thế nào|kiểu gì|cách gì|cách nào
+! array order = order|đặt hàng|mua hàng|mua đồ|mua trà|đặt trà|order trà
+! array sale = khuyến mại|khuyến mãi|giảm giá|sale|sales
