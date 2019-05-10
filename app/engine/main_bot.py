@@ -7,11 +7,14 @@ EXCEPTION_WORD = ("chanh",)
 
 class BotManager:
     def __init__(self, _isTrain = False):
+      # self.ner = None
       self.ner = NeuroNER(parameters_filepath = "ner/src/parameters.ini",
                                         train_model = _isTrain,
                                         use_pretrained_model = not _isTrain,
-                                        pretrained_model_folder = "ner/trained_models/vi_2019-04-22")
+                                        pretrained_model_folder = "ner/trained_models/vi_2019-05-09")
       self.isTrain = _isTrain
+      f = open("ner/data/dic_location", "r")
+      self.location_dict = f.readlines()
 
     # Get intent and NER
     def bot_process(self, msg):
@@ -29,10 +32,23 @@ class BotManager:
       # Change number and phone back to it's original
       for number in numbers:
         for e in entities:
-          if(e['start'] == number['start']):
-            e['text'] = e['text'].replace(e['text'], number['word'])
+          # print(number['start'], e['text'], e['start'], '\n')
+          if (e['start'] <= number['start'] and ('number' in e['text'] or 'phone' in e['text'])):
+            e['text'] = e['text'].replace("number", number['word'])
+            e['text'] = e['text'].replace("phone", number['word'])
             break
-
+      #add LOCATION if cant catch
+      for line in self.location_dict:
+        line = line[:-1]
+        is_existed = False
+        line = line.replace(' ', '_')
+        if line in msg:
+          for e in entities:
+            if line in e['text']:
+              is_existed = True
+          if not is_existed:
+            new_entities = {'id': 'Tnew', 'type': 'LOCATION', 'start': len(msg) + 1, 'end': len(msg) + 1 + len(line), 'text': line}
+            entities.append(new_entities)
       return intents, entities
 
     def getIntent(self, msg):
@@ -45,14 +61,11 @@ class BotManager:
       return self.ner.predict(text=msg)
 
     def preProcessLoc(self, msg):
-      f = open("ner/data/dic_location", "r")
-      if f.mode == 'r':
-        lines = f.readlines()
-        for line in lines:
-            line = line[:-1]
-            if line in msg:
-              new_line = line.replace(' ', '_')
-              msg = msg.replace(line, new_line)
+      for line in self.location_dict:
+          line = line[:-1]
+          if line in msg:
+            new_line = line.replace(' ', '_')
+            msg = msg.replace(line, new_line)
       return msg
 
     def preProcessNumber(self, msg):

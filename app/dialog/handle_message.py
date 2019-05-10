@@ -3,7 +3,9 @@ from rivescript import RiveScript
 from app.dialog.dialog_utils import *
 from app.dialog.handle_intent import HandleIntent
 from app.dialog.handle_state import HandleState
-from app.dialog.const import START_STATE, ORDER_INTENT, ORDERING_STATE, EXIST_INTENT, SENTIMENT_INTENT
+from app.dialog.const import START_STATE, ORDER_INTENT, ORDERING_STATE, EXIST_INTENT, SENTIMENT_INTENT, \
+  ASK_PRICE_INTENT, ASK_TIME_INTENT, ASK_LOC_INTENT, YESNO_PRODUCT_INTENT, YESNO_SHIP_INTENT, \
+  PROMOTION_INTENT, ASK_PRODUCT_SIZE_INTENT
 import json
 import app.utils.utils_zalo as utils_zalo
 from app.utils.sentences import WAIT_PROCESS_ORDER
@@ -14,7 +16,7 @@ import app.api.zalo_api as zaloAPI
 
 class HandleMessage:
   def __init__(self):
-    # self.bot = BotManager(True)
+    # self.nlpBot = BotManager(True)
     self.nlpBot = BotManager()
     self.riveBot = RiveScript(utf8=True)
     self.riveBot.load_directory("engine/eg/brain")
@@ -32,13 +34,19 @@ class HandleMessage:
     user_msg = self.pre_process(msg = user_msg)
     # reply = "Xin lỗi mình không trả lời được tin nhắn"
     response = {
-        "reply_type": "reply_text",
-        "reply": "None"
+      "reply_type": "reply_text",
+      "reply": "None"
     }
     if get_state(dialog) == START_STATE:
+      reply = ""
+      try:
+        reply = self.riveBot.reply("teabot", user_msg)
+      except Exception as e:
+        print("Unexpected exception getting a reply: {}".format(e))
+        reply = "!@%!@#!@... Xin lỗi mình đang gặp trục trặc đợi mình gọi chủ ra sửa chút nha."
       response = {
         "reply_type": "reply_text",
-        "reply": self.riveBot.reply("teabot", user_msg)
+        "reply": reply
       }
     if (response['reply'] == "None"):
       intents, entities = self.nlpBot.bot_process(user_msg)
@@ -57,8 +65,15 @@ class HandleMessage:
       dialog_state = self.handle_state.handle_state(dialog)
       if dialog_state:
         return dialog_state
-
-      dialog = self.handle_intent.handle_intent(dialog)
+      try:
+        dialog = self.handle_intent.handle_intent(dialog)
+      except Exception as e:
+        print("Unexpected exception getting a reply: {}".format(e))
+        response = {
+          "reply_type": "reply_text",
+          "reply": "!@%!@#!@... Xin lỗi mình đang gặp trục trặc đợi mình gọi chủ ra sửa chút nha."
+        }
+        set_response(dialog = dialog, response= response)
     else:
       set_response(dialog = dialog, response= response)
 
@@ -81,8 +96,6 @@ class HandleMessage:
 
     return msg
 
-
-
 #Utils
   def convert_intents(self, intents):
     """
@@ -97,6 +110,20 @@ class HandleMessage:
       return EXIST_INTENT
     if (question_type == "sentiment"):
       return SENTIMENT_INTENT
+    if (question_type == "attribute" and domain == 'product' and question_attr == 'price'):
+      return ASK_PRICE_INTENT
+    if (question_type == "attribute" and domain == 'shop' and question_attr == 'time'):
+      return ASK_TIME_INTENT
+    if (question_type == "attribute" and domain == 'shop' and question_attr == 'location'):
+      return ASK_LOC_INTENT
+    if (question_type == "yesno" and domain == 'product'):
+      return YESNO_PRODUCT_INTENT
+    if (question_type == "yesno" and domain == 'ship'):
+      return YESNO_SHIP_INTENT
+    if (domain == 'promotion'):
+      return PROMOTION_INTENT
+    if (question_type == "attribute" and domain == 'product' and question_attr == 'size_product'):
+      return ASK_PRODUCT_SIZE_INTENT
     return None
 
   def convert_entities(self, entities):

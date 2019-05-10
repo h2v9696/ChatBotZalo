@@ -8,7 +8,7 @@
 - Một quả trứng cộng một quả trứng sẽ ra hai quả trứng
 
 + [*] (cộng|trừ|nhân|chia) [*] bằng [mấy] {weight=5}
-- Mình chịu :))
+- Mình chịu :D
 
 // =================================================
 // SHORT CHARACTER
@@ -21,7 +21,23 @@
 // =================================================
 // JOKE
 // =================================================
-+ [*] (truyện cười|hài hước|chuyện hài|hài|vui vui) [*]
+
++ [@i] có tiền không [*]
+- Bạn đến với mình chỉ vì tiền à.
+- Người xưa có câu "đồng tiền đi liền khúc ruột", mình không có ruột thì lấy đâu ra tiền :--| {weight=5}
+- Mình chỉ là con bot làm công ăn lương lấy đâu ra tiền bây giờ :--| {weight=5}
+
++ [@i] có tiền không cho [@user] vay [*]
+@ có tiền không
+
++ [@i] cho [@user] [vay] tiền [*]
+@ có tiền không
+
++ [@user] có (xinh|đẹp|dễ thương|đáng yêu) không [*]
+- Tớ thử hỏi chị google assitant thì chị bảo bạn đẹp lắm :B
+
+
++ [*] (truyện cười|hài hước|chuyện hài|vui vui) [*]
 - con trai bây giờ thay bồ như thay áo. Còn con gái thì khác. Họ chỉ "mặc thêm áo" cho ấm mà thôi
 - Tình yêu là sự hòa đồng: Tâm hồn, trí tuệ, thể xác nhưng phải chính xác theo thứ tự này.
 - Yêu là phải nói cũng như đói là phải ăn.

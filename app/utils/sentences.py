@@ -72,7 +72,7 @@ ADD_MORE_NOTE_RESPONSE = (
 )
 
 SORRY_CAUSE_PRODUCT_OUT_STOCK = (
-    "Xin lỗi bạn, mình sẽ cập nhật sớm nhất có thể, bạn vui lòng chọn món khác nhé.",
+    "Xin lỗi bạn, mình sẽ cập nhật sớm nhất có thể.\nMình đã bỏ khỏi đơn hàng, bạn vui lòng chọn món khác nhé.",
 )
 
 SORRY_FOR_BAD_REPORT = (
@@ -86,6 +86,24 @@ CALL_BOSS = (
     "Để mình gọi chủ quán giải đáp cho bạn nhé.",
 )
 
+ANSWER_SHOP_TIME = (
+    "Shop mình ship trà 24/7 luôn nha. Bạn có thể đặt hàng bất cứ lúc nào!",
+)
+
+ANSWER_SHOP_LOC = (
+    "Shop mình mở tại gia chưa có mở quán, trà shop mình làm ngon như nhà làm luôn :D",
+)
+
+ANSWER_YESNO_SHIP = (
+    "Shop mình chỉ ship ở Hà Nội và luôn là freeship nha :D",
+)
+
+ANSWER_PROMOTION = (
+    "Bên mình đang có chương trình giảm giá ngày khai trương và những sản phẩm trên đây được giảm giá 20% nhé\n",
+)
+ANSWER_PRODUCT_SIZE = (
+    "Đồ uống bên mình có hai cỡ là M dung lượng 150 ml và cỡ L 200 ml nhé",
+)
 # Pattern in sentence
 CONFIRM = (
     "xác nhận",
@@ -93,6 +111,12 @@ CONFIRM = (
     "ok",
     "đúng rồi",
     "được rồi",
+)
+
+YES = (
+    'có',
+    'cũng được',
+    "ok"
 )
 
 REFUSE = (

@@ -17,16 +17,28 @@
 + [*] (xin|xem) menu [*]
 @ xin cái menu
 
-+ [*] có những món gì [*]
++ [*] có những món (gì|nào) [*]
 @ xin cái menu
 
 + [*] có những gì [*]
 @ xin cái menu
 
-+ [*] có [những] [loại] trà gì [*]
++ [*] có [những] [loại] trà (gì|nào) [*]
 @ xin cái menu
 
-+ [*] có [những] [loại] topping gì [*]
++ [*] có [những] [loại] topping (gì|nào) [*]
+@ xin cái menu
+
++ [*] có [những] [loại] (đồ uống|nước uống) (gì|nào) [*]
+@ xin cái menu
+
++ [*] bán [*] gì [*]
+@ xin cái menu
+
++ [*] @shop bán gì [*]
+@ xin cái menu
+
++ [*] @shop [*] bán [*] gì [*]
 @ xin cái menu
 
 > object get_menu python
@@ -65,11 +77,15 @@
 
 + [*] có thể @order được không [*]
 - Bạn có thể đặt hàng bằng cách chat trực tiếp với mình nha.
+- Bạn muốn mua gì nhỉ?
 
 + [*] @how [để] @order [nhỉ] [*]
 @ có thể đặt hàng được không
 
 + [*] @order @how [nhỉ] [*]
+@ có thể đặt hàng được không
+
++ [*] giúp mình @order [với] [*]
 @ có thể đặt hàng được không
 
 // SALE
@@ -120,7 +136,9 @@
 @ sđt của shop là gì
 
 + [*] có ship đến <star> không [*]
-* <star> != hà nội => Shop mình chỉ nhận những đơn hàng ở Hà Nội thôi nha.
+- Bên mình chỉ ship với những đơn hàng trong Hà Nội nha.
+
++ [*] có ship không [*]
 - Có chứ, bên mình free ship với những đơn hàng trong Hà Nội nha.
 
 // Q & A
@@ -136,29 +154,26 @@
 @ làm thế nào để thay đổi order
 
 + [*] @how [để] (hủy|bỏ) (đơn hàng|order) [*]
-- Bạn có thể tìm lại tin nhắn tạo đơn hàng thành công bên trên.\n
-^ Sau đó nhớ mã đơn hàng và mở đường link trong tin nhắn đó.\n
-^ Tiếp đến bạn có thể tìm đơn hàng theo mã đơn hàng > Xem chi tiết > Hủy đơn hàng để hủy đơn hàng nhé.
+@ hủy đơn hàng
 
 + [*] (hủy|bỏ) (đơn hàng|order) @how [*]
-@ làm thế nào để hủy đơn hàng
+@ hủy đơn hàng
 
 + [*] (hủy|bỏ) (đơn hàng|order) [*]
-@ làm thế nào để hủy đơn hàng
-
-+ [*] @how [để] (theo dõi|xem) [lại] (đơn hàng|order) [*]
 - Bạn có thể tìm lại tin nhắn tạo đơn hàng thành công bên trên.\n
 ^ Sau đó nhớ mã đơn hàng và mở đường link trong tin nhắn đó.\n
-^ Tiếp đến bạn có thể tìm đơn hàng theo mã đơn hàng > Xem chi tiết để xem lại đơn hàng nhé.
-
-+ [*] (theo dõi|xem) [lại] (đơn hàng|order) @how [*]
-@ làm thế nào để theo dõi đơn hàng
+^ Tiếp đến bạn có thể tìm đơn hàng theo mã đơn hàng rồi 'Xem chi tiết' chọn 'Hủy đơn hàng' để hủy đơn hàng nhé.
 
 + [*] (theo dõi|xem) [lại] (đơn hàng|order) [*]
-@ làm thế nào để theo dõi đơn hàng
+- Bạn có thể tìm lại tin nhắn tạo đơn hàng thành công bên trên.\n
+^ Sau đó nhớ mã đơn hàng và mở đường link trong tin nhắn đó.\n
+^ Tiếp đến bạn có thể tìm đơn hàng theo mã đơn hàng rồi 'Xem chi tiết' để xem lại đơn hàng nhé.
 
-+ [*] tình trạng (đơn hàng|order) [*]
-@ làm thế nào để theo dõi đơn hàng
++ [*] (tình trạng|thông tin|trạng thái) (đơn hàng|order) [*]
+@ theo dõi đơn hàng
+
++ [*] (tình trạng|thông tin|trạng thái) [*] (đơn hàng|order) [*]
+@ theo dõi đơn hàng
 
 + [*] @how [để] (trả tiền|thanh toán) [*]
 - Bên mình chỉ nhận chuyển tiền trực tiếp thôi nha.

@@ -78,6 +78,8 @@
 ! sub ;-) = nháy mắt
 ! sub ;) = nháy mắt
 ! sub :-( = buồn
+! sub p-( = buồn
+! sub :-(( = buồn
 ! sub :( = buồn
 ! sub :(( = buồn
 ! sub :'( = khóc
@@ -151,7 +153,7 @@
 ! array sizes = S M L XL nhỏ lớn vừa
 ! array height = cao dài rộng dày
 ! array measure = centi centimet cm milimet mm mét met m inch in
-! array yes = yes yeah yep yup ya yea được ok ổn
+! array yes = yes yeah yep yup ya yea được ok ổn có
 ! array no = no nah nope nay không k ko
 ! array i = cậu bạn mày em mi ngươi m
 ! array user = tớ mình tao t ta tôi
@@ -162,6 +164,6 @@
 ! array vulgarity_words = mẹ mày|địt|như cứt|cứt|dm|dmm|cc|ccc|fuck|đụ|lồn|loz|oc|óc chó
 ! array sad_words = buồn|hu hu |huhu|khóc
 ! array shop = shop|quán|cửa hàng
-! array how = thế nào|như thế nào|làm thế nào|kiểu gì|cách gì|cách nào
+! array how = thế nào|như thế nào|làm thế nào|kiểu gì|cách gì|cách nào|bằng cách nào
 ! array order = order|đặt hàng|mua hàng|mua đồ|mua trà|đặt trà|order trà
 ! array sale = khuyến mại|khuyến mãi|giảm giá|sale|sales

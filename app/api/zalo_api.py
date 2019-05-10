@@ -39,7 +39,7 @@ def reply_user_link(user_id, links: list):
   print("\nReply user by link: ", send_link_message)
   # return links
 
-def reply_user_select_yes_no(user_id, msg: str, sub_msg: str, img_url: str):
+def reply_user_select(user_id, msg: str, sub_msg: str, img_url: str):
   message_info = {
     'recipient': {
       'user_id': user_id
@@ -89,7 +89,42 @@ def reply_user_select_yes_no(user_id, msg: str, sub_msg: str, img_url: str):
     json=message_info)
   print("\nReply user by select: ", response.json())
   return response.json()
-  # return links
+
+def reply_user_select_yes_no(user_id, msg: str, sub_msg: str, img_url: str):
+  message_info = {
+    'recipient': {
+      'user_id': user_id
+    },
+    'message': {
+      'attachment': {
+        'type': "template",
+        'payload': {
+          "template_type": "list",
+          "elements": [{
+            "title": msg,
+            "subtitle": sub_msg,
+            "image_url": img_url
+          }],
+          "buttons": [
+           {
+              "title": "Có",
+              "payload": "Có",
+              "type": "oa.query.show"
+           },
+           {
+              "title": "Không",
+              "payload": "Không",
+              "type": "oa.query.show"
+           }
+          ],
+        }
+      }
+    }
+  }
+  response = requests.post(url= API_URL +"oa/message?access_token=" + ACCESS_TOKEN,
+    json=message_info)
+  print("\nReply user by select yes no: ", response.json())
+  return response.json()
 
 def get_user_profile(user_id):
   return zalo_oa_client.get('getprofile', {'uid': user_id})
@@ -173,7 +208,7 @@ def get_best_products(limit: int):
   reply_user_text(user_id, result)
   return "Mời bạn chọn món!"
 
-def get_sale_products():
+def get_sale_products(isIntent: bool = False):
   user_id, msg, event = receive_user_text()
 
   all_products = get_products(False)
@@ -183,6 +218,9 @@ def get_sale_products():
   for p in sale_products:
     result += utils_zalo.print_product(index = index, products = p, sale = p['sale'])
     index += 1
+
+  if isIntent:
+    return result + "\nMời bạn chọn món!"
 
   reply_user_text(user_id, result)
   return "Mời bạn chọn món!"

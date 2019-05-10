@@ -41,6 +41,8 @@ class DialogManager(metaclass = SingletonMeta):
         if current_dialog["responses"]["reply_type"] == "reply_text":
           zaloAPI.reply_user_text(user_id, current_dialog["responses"]["reply"])
         elif current_dialog["responses"]["reply_type"] == "reply_select":
+          zaloAPI.reply_user_select(user_id, current_dialog["responses"]["reply"], current_dialog["responses"]["sub_reply"], current_dialog["responses"]["image_url"])
+        elif current_dialog["responses"]["reply_type"] == "reply_select_yes_no":
           zaloAPI.reply_user_select_yes_no(user_id, current_dialog["responses"]["reply"], current_dialog["responses"]["sub_reply"], current_dialog["responses"]["image_url"])
         # elif current_dialog["responses"]["reply_type"] == "reply_link":
 

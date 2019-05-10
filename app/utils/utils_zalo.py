@@ -88,24 +88,25 @@ def get_district_from_id(id: int):
 
 def get_sum_quantity_in_product(product: dict, size_id: str = ""):
   result = 0
-  if 'variations' in product:
-    if (size_id != ""):
-      if convert_id_size(id_or_size = size_id) == "m" or convert_id_size(id_or_size = size_id) == "l":
+  if product:
+    if 'variations' in product:
+      if (size_id != ""):
+        if convert_id_size(id_or_size = size_id) == "m" or convert_id_size(id_or_size = size_id) == "l":
+          for v in product['variations']:
+            if v['attributes'][0] == size_id:
+              if ('quantity' in v):
+                return v['quantity']
+              return 0
+          return -1
+      else:
         for v in product['variations']:
-          if v['attributes'][0] == size_id:
-            if ('quantity' in v):
-              return v['quantity']
-            return 0
-        return -1
+          if ('quantity' in v):
+            result += v['quantity']
+        return result
     else:
-      for v in product['variations']:
-        if ('quantity' in v):
-          result += v['quantity']
-      return result
-  else:
-    return product['quantity']
+      return product['quantity']
 
-  return None
+  return -1
 
 def sort_quan_product(all_products, limit: int):
   for p in all_products:

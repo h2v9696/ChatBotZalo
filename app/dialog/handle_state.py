@@ -4,7 +4,7 @@ from app.utils.sentence_utils import *
 from app.dialog.dialog_utils import *
 from app.dialog.const import START_STATE, ORDERED_STATE, ORDERING_STATE, \
                                                 ORDERING_STATE_ADD, ORDERING_STATE_SWAP, ORDERING_STATE_DEC, \
-                                                ORDERING_STATE_NOTE
+                                                ORDERING_STATE_NOTE, ASKING_PRICE_STATE
 
 class HandleState:
   def __init__(self):
@@ -27,12 +27,13 @@ class HandleState:
         ORDERING_STATE_DEC: self.__order_product_confirm,
         ORDERING_STATE_NOTE: self.__ordering_add_note,
 
+        ASKING_PRICE_STATE: self.__handle_ask_price,
 
         #begin
         "begin": self.__begin
       }
       if (_state in functions):
-        return functions[_state](state = _state, dialog=_dialog)
+        return functions[_state](state = _state, dialog = _dialog)
       return None
 
     state = dialog["state"]
@@ -80,4 +81,15 @@ class HandleState:
     """
 
     dialog = self.handle_detail.add_more_extra_note(dialog = dialog, state = state)
+    return dialog
+
+  def __handle_ask_price(self, state: str, dialog: dict):
+    """
+    handle ask price then create order by intent
+    :param intent:
+    :param dialog:
+    :return:
+    """
+
+    dialog = self.handle_detail.handle_ask_create_order(dialog = dialog, state = state)
     return dialog

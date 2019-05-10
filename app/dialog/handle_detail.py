@@ -3,13 +3,17 @@ import app.utils.utils_zalo as utils_zalo
 from app.dialog.dialog_utils import *
 from app.dialog.const import START_STATE, ORDERED_STATE, ORDERING_STATE, \
                                                 ORDERING_STATE_ADD, ORDERING_STATE_SWAP, ORDERING_STATE_DEC, \
-                                                ORDERING_STATE_NOTE
+                                                ORDERING_STATE_NOTE, ASK_PRICE_INTENT, ASKING_PRICE_STATE, \
+                                                ASK_TIME_INTENT, ASK_LOC_INTENT, YESNO_SHIP_INTENT, PROMOTION_INTENT, \
+                                                ASK_PRODUCT_SIZE_INTENT
 from app.utils.sentences import CONFIRM, REFUSE, CHANGE, ADD, DEC, SWAP, ASK_FOR_MORE_INFO, ASK_FOR_ONE_INFO, \
   CREATED_ORDER, SORRY_FOR_ERROR_CREATE_ORDER, SORRY_FOR_ERROR, \
   ASK_FOR_CHANGE_INFO, ASK_FOR_ADD_INFO, WAIT_FIX_ORDER, CANCELED_ORDER, \
   ASK_CAUSE_WRONG_PHONE, ASK_CAUSE_NO_PRODUCT, ASK_FOR_CONFIRM, ASK_FOR_DEL_INFO, \
   PRODUCT_NOT_IN_ORDER, ASK_FOR_MORE_NOTE, GET_REFUSE, ADD_MORE_NOTE_RESPONSE, \
-  SORRY_CAUSE_PRODUCT_OUT_STOCK, BAD, NOT_BAD, SORRY_FOR_BAD_REPORT, CALL_BOSS, THANKS
+  SORRY_CAUSE_PRODUCT_OUT_STOCK, BAD, NOT_BAD, SORRY_FOR_BAD_REPORT, CALL_BOSS, THANKS, YES, \
+  WAIT_PROCESS_ORDER, ANSWER_SHOP_TIME, ANSWER_SHOP_LOC, ANSWER_YESNO_SHIP, OTHER, \
+  ANSWER_PROMOTION, ANSWER_PRODUCT_SIZE
 from app.utils.sentence_utils import *
 import json
 
@@ -31,7 +35,7 @@ class HandleDetail:
       isNewEntities = False
       entities = dialog['snips']['entities'].pop(0)
 
-    if not isNewEntities:
+    if not isNewEntities and len(dialog['snips']['entities']) > 0:
       old_entities = dialog['snips']['entities'][0]
 
     if (len(entities) > 0):
@@ -190,6 +194,7 @@ class HandleDetail:
     if check_sentence_in_group(sentence = dialog["snips"]["sentence"], group = REFUSE):
       zaloAPI.reply_user_text(dialog['user_id'], get_random_reply(replies = GET_REFUSE))
     else:
+      dialog['snips']['entities'].pop(0)
       zaloAPI.reply_user_text(dialog['user_id'], get_random_reply(replies = ADD_MORE_NOTE_RESPONSE))
       dialog['variable']['extra_note'] += " Khách ghi chú: " + dialog["snips"]["sentence"]
 
@@ -204,7 +209,7 @@ class HandleDetail:
     else:
       result = get_random_reply(replies = CREATED_ORDER)
 
-    # End order change state to begin
+    # End add not change state to begin
     dialog = set_state(dialog = dialog, state = START_STATE)
     # Clear entities variable
     response = {
@@ -214,15 +219,41 @@ class HandleDetail:
     dialog = set_response(dialog = dialog, response = response)
     return dialog
 
+  def handle_ask_price(self, dialog: dict, state: str):
+    dialog = set_state(dialog = dialog, state = state)
+
+    dialog = self.__create_order_info(dialog = dialog)
+    # End order change state to begin
+    return dialog
+
+  def handle_ask_create_order(self, dialog: dict, state: str):
+    if check_sentence_in_group(sentence = dialog["snips"]["sentence"], group = YES):
+      # Confirm
+      zaloAPI.reply_user_text(dialog['user_id'], get_random_reply(replies = WAIT_PROCESS_ORDER))
+      dialog = self.order_product(dialog, ORDERING_STATE)
+    else:
+      response = {
+        "reply_type": "reply_text",
+        "reply": get_random_reply(replies = GET_REFUSE)
+      }
+      dialog = set_response(dialog = dialog, response = response)
+      # End order change state to begin
+      dialog = set_state(dialog = dialog, state = START_STATE)
+    return dialog
+
 # other
   def exist_product(self, dialog: dict, state: str):
     isNewEntities = True
     reply = ''
-    if (get_state(dialog) == START_STATE):
-      entities = dialog['snips']['entities'][0]
+    entities = []
+    if len(dialog['snips']['entities']) > 0:
+      if (get_state(dialog) == START_STATE):
+        entities = dialog['snips']['entities'][0]
+      else:
+        isNewEntities = False
+        entities = dialog['snips']['entities'].pop(0)
     else:
-      isNewEntities = False
-      entities = dialog['snips']['entities'].pop(0)
+      reply = "Xin lỗi mình chưa biết bạn muốn đề cập đến sản phẩm nào?"
 
     all_products = zaloAPI.get_products(False)
     for e in entities:
@@ -264,9 +295,67 @@ class HandleDetail:
     dialog = set_response(dialog = dialog, response = response)
     return dialog
 
+  def handle_ask_simple_answer(self, dialog: dict, state: str):
+    switcher = {
+        ASK_TIME_INTENT: get_random_reply(replies = ANSWER_SHOP_TIME),
+        ASK_LOC_INTENT: get_random_reply(replies = ANSWER_SHOP_LOC),
+        YESNO_SHIP_INTENT: get_random_reply(replies = ANSWER_YESNO_SHIP),
+        PROMOTION_INTENT: get_random_reply(replies = ANSWER_PROMOTION) + zaloAPI.get_sale_products(isIntent = True),
+        ASK_PRODUCT_SIZE_INTENT: get_random_reply(replies = ANSWER_PRODUCT_SIZE),
+    }
+    print(switcher, dialog["snips"]["intent"], '\n')
+    reply = switcher.get(dialog["snips"]["intent"], get_random_reply(replies = OTHER))
+
+    dialog = set_state(dialog = dialog, state = START_STATE)
+    response = {
+      "reply_type": "reply_text",
+      "reply": reply
+    }
+    dialog = set_response(dialog = dialog, response = response)
+    return dialog
+
+  def handle_yesno_product(self, dialog: dict, state: str):
+    isNewEntities = True
+    reply = ''
+    entities = []
+    if len(dialog['snips']['entities']) > 0:
+      if (get_state(dialog) == START_STATE):
+        entities = dialog['snips']['entities'][0]
+      else:
+        isNewEntities = False
+        entities = dialog['snips']['entities'].pop(0)
+
+    all_products = zaloAPI.get_products(False)
+    for e in entities:
+      if (e['label'] == "TYPE" or e['label'] == "TOPPING"):
+        if (utils_zalo.check_if_product_exist(all_products, e['value'], size = "")):
+          reply += "Shop mình có " + e['value'] + " nha bạn\n"
+        else:
+          reply += "Sản phẩm " + e['value'] + " không tồn tại, hoặc đã hết hàng, xin bạn vui lòng quay lại sau nhé.\n"
+
+    if not entities:
+      reply = "Xin lỗi mình chưa biết bạn muốn đề cập đến sản phẩm nào?"
+
+    dialog = set_state(dialog = dialog, state = START_STATE)
+    response = {
+      "reply_type": "reply_text",
+      "reply": reply[:len(reply) - 1]
+    }
+    dialog = set_response(dialog = dialog, response = response)
+    return dialog
+
+
 # private section
   def __handle_error_phone(self, dialog: dict, state: str):
     dialog = set_state(dialog = dialog, state = state)
+    index = 0
+    while (index < len(dialog['snips']['entities'][0])):
+        entity = dialog['snips']['entities'][0][index]
+        if entity['label'] == 'PHONE':
+          dialog['snips']['entities'][0].pop(index)
+        else:
+          index += 1
+
     response = {
       "reply_type": "reply_text",
       "reply": get_random_reply(replies = ASK_CAUSE_WRONG_PHONE)
@@ -274,13 +363,14 @@ class HandleDetail:
     dialog = set_response(dialog = dialog, response = response)
     return dialog
 
-  def __handle_product_out_stock(self, dialog: dict, state: str):
+  def __handle_product_out_stock(self, dialog: dict, state: str, product: dict):
+    # Delete product from entity if it out of stock
     dialog = set_state(dialog = dialog, state = state)
     # dialog['snips']['entities'][0] = (entity for entity in dialog['snips']['entities'][0] if (entity['label'] == 'LOCATION' or entity['label'] == 'PHONE'))
     index = 0
     while (index < len(dialog['snips']['entities'][0])):
         entity = dialog['snips']['entities'][0][index]
-        if not (entity['label'] == 'LOCATION' or entity['label'] == 'PHONE'):
+        if ((entity['parent'] != '' and  entity['parent'] in product['name'].lower()) or entity['value'] in product['name'].lower()):
           dialog['snips']['entities'][0].pop(index)
         else:
           index += 1
@@ -301,16 +391,26 @@ class HandleDetail:
           'phone': '',
           'user_id': userProfile['data']['userId'],
           'address': '',
-          'district': 1,
+          'district': 0,
           'city': 1
       },
       'order_items': [],
       'extra_note': ""
     }
     index = 0
+    entities = []
     # Maybe use pop to clear entities?
     # entities = dialog['snips']['entities'].pop(0)
-    entities = dialog['snips']['entities'][0]
+    if len(dialog['snips']['entities']) > 0:
+      entities = dialog['snips']['entities'][0]
+    else:
+      response = {
+        "reply_type": "reply_text",
+        "reply": "Xin lỗi bạn, mình đang hiểu bạn muốn báo giá nhưng không thấy bạn đề cập đến sản phẩm nào."
+      }
+      dialog = set_response(dialog = dialog, response = response)
+      dialog = set_state(dialog = dialog, state = START_STATE)
+      return dialog
     # print("\nCreate order dialog entities: ", json.dumps(entities, indent = 2, ensure_ascii = False))
 
     for i, e in enumerate(entities):
@@ -368,10 +468,12 @@ class HandleDetail:
           district = utils_zalo.get_district_id(address = e['value'])
           # If cant get district id then let it default is 1 else change default district and remove district from location
           if (district == 0):
-            order['customer']['address'] = e['value']
+            order['customer']['address'] += e['value']
           else:
-            order['customer']['address'] = e['value'].replace(utils_zalo.get_district_from_id(district), '')
-            order['customer']['address'] = order['customer']['address'][:-1]
+            order['customer']['address'] += e['value'].replace(utils_zalo.get_district_from_id(district), '')
+            order['customer']['address'] = order['customer']['address'].replace("hà nội", '')
+            while order['customer']['address'][-1:] == ' ':
+              order['customer']['address'] = order['customer']['address'][:-1]
             order['customer']['district'] = district
 
         if (e['label'] == 'PHONE'):
@@ -383,9 +485,16 @@ class HandleDetail:
 
     # Confirm order
     product = None
-
-    order_confirm = "Đơn hàng:\nNgười đặt hàng: " + order['customer']['name'] + "\nSố điện thoại: " + order['customer']['phone']
-    order_confirm += "\nĐịa chỉ: " + order['customer']['address'].title() + ", " + utils_zalo.get_district_from_id(id = order['customer']['district']).title() + ", " + "Hà Nội\n"
+    order_confirm = ""
+    if (get_state(dialog = dialog) != ASKING_PRICE_STATE):
+      order_confirm = "Đơn hàng:\nNgười đặt hàng: " + order['customer']['name'] + "\nSố điện thoại: " + order['customer']['phone']
+      district = ", "
+      if order['customer']['district'] != 0:
+        district += utils_zalo.get_district_from_id(id = order['customer']['district']).title()
+      else:
+        order['customer']['district'] = 1
+        district = ""
+      order_confirm += "\nĐịa chỉ: " + order['customer']['address'].title() + district + ", " + "Hà Nội\n"
     order_confirm += "Sản phẩm:\n"
     p_index = 1
     total_price = 0
@@ -412,7 +521,7 @@ class HandleDetail:
           # print(quantity)
           if (quantity - item["quantity"] < 0):
             zaloAPI.reply_user_text(dialog['user_id'], "Sản phẩm: " + product['name'] + " - Size: " + utils_zalo.convert_id_size(id_or_size = item['variation']['id']).upper() + (" chỉ còn " + str(quantity) + " đơn vị" if (quantity > 0) else " đã hết hàng"))
-            dialog = self.__handle_product_out_stock(dialog = dialog, state = ORDERING_STATE_ADD)
+            dialog = self.__handle_product_out_stock(dialog = dialog, state = ORDERING_STATE_ADD, product = product)
             return dialog
           else:
             order_confirm += " - Size: " + (utils_zalo.convert_id_size(id_or_size = item['variation']['id']).upper() if not (item['variation']['id'] == '') else "M")
@@ -421,7 +530,7 @@ class HandleDetail:
 
           if (quantity - item["quantity"] < 0):
             zaloAPI.reply_user_text(dialog['user_id'], "Sản phẩm: " + product['name'] + " đã hết hàng")
-            dialog = self.__handle_product_out_stock(dialog = dialog, state = ORDERING_STATE_ADD)
+            dialog = self.__handle_product_out_stock(dialog = dialog, state = ORDERING_STATE_ADD, product = product)
             return dialog
 
         product = utils_zalo.check_sale_product(product)
@@ -457,20 +566,34 @@ class HandleDetail:
         dialog = set_state(dialog = dialog, state = ORDERING_STATE_SWAP)
 
     if product:
-      zaloAPI.reply_user_text(dialog['user_id'], get_random_reply(replies = ASK_FOR_CONFIRM))
+      if (get_state(dialog = dialog) != ASKING_PRICE_STATE):
+        zaloAPI.reply_user_text(dialog['user_id'], get_random_reply(replies = ASK_FOR_CONFIRM))
 
       # print(order)
-      order_confirm += "Tổng giá: " + str(int(total_price * (1 - sale))) + " đ\nGhi chú: " + order['extra_note']
+      order_confirm += "Tổng giá: " + str(int(total_price * (1 - sale))) + " đ"
+      if (get_state(dialog = dialog) != ASKING_PRICE_STATE):
+        order_confirm += "\nGhi chú: " + order['extra_note']
       # Confirm order
-      response = {
-        "reply_type": "reply_select",
-        "reply": "Xác nhận đặt hàng",
-        "sub_reply": order_confirm,
-        "image_url":  product['photo_links'][0]
-      }
+      if (get_state(dialog = dialog) != ASKING_PRICE_STATE):
+        response = {
+          "reply_type": "reply_select",
+          "reply": "Xác nhận đặt hàng",
+          "sub_reply": order_confirm,
+          "image_url":  product['photo_links'][0]
+        }
+        dialog = set_state(dialog = dialog, state = ORDERED_STATE)
+        dialog['variable'] = order
+      else:
+        zaloAPI.reply_user_text(dialog['user_id'], "Đây là tổng giá, bạn có muốn mình giúp bạn tạo đơn hàng luôn không?")
+
+        response = {
+          "reply_type": "reply_select_yes_no",
+          "reply": "Báo giá",
+          "sub_reply": order_confirm,
+          "image_url":  product['photo_links'][0]
+        }
+
       dialog = set_response(dialog = dialog, response = response)
-      dialog = set_state(dialog = dialog, state = ORDERED_STATE)
-      dialog['variable'] = order
 
     return dialog
 

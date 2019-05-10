@@ -73,6 +73,8 @@ def remove_bio_from_label_name(label_name):
     if label_name[:2] in ['B-', 'I-', 'E-', 'S-']:
         new_label_name = label_name[2:]
     else:
+        if not (label_name == 'O'):
+            print("FUCKING_WOW_SHIT ", label_name, '\n')
         assert(label_name == 'O')
         new_label_name = label_name
     return new_label_name

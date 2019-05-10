@@ -23,7 +23,7 @@
 // AGREEMENT
 // =================================================
 
-+ (okie|ok|ừ)
++ (okie|ok|ừ|xác nhận)
 - Ok men
 
 + (thật luôn|thật hả)

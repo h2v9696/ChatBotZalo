@@ -99,8 +99,8 @@
 // APPEARANCE
 // =================================================
 
-+ [*] (@i) [*] đẹp không [*]{weight=10}{topic=appearance}
-- Ai cũng bảo mình nhìn được
++ [*] (@i) [*] (xinh|đẹp) không [*]{weight=10}{topic=appearance}
+- Ai cũng bảo mình nhìn được, cơ mà mình thấy mình chỉ cực kỳ được thôi :D
 
 + [*] <bot name> [*] xinh không [*]{weight=2}
 @ bạn xinh không
@@ -125,10 +125,11 @@
 + [@i] biết gì
 - Mình biết nhiều thứ, mà cơ bản là về cửa hàng này :D còn các cái khác mình chịu à.
 
-+ [@i] [có thể] làm gì
-- Mình có thể giúp đỡ mọi người đặt hàng dễ dàng và bạn còn có thể tán gẫu với mình nữa :D
++ [@i] có (thể|khả năng) làm [được] gì [*]
+- Mình có thể giúp đỡ chủ mình trông cửa hàng và bạn còn có thể tán gẫu với mình nữa :D
+- Mình có thể giúp bạn: đặt hàng, báo giá, kiểm tra sản phẩm,... và bạn còn có thể nói chuyện với mình cho đỡ buồn nữa :D  {weight=10}
 
-+ [@i] có những chức năng gì
++ [@i] có [những] (chức năng|khả năng) gì
 @ có thể làm gì
 
 // =================================================
@@ -164,6 +165,19 @@
 ^ Nhưng dạo này nhiều <star> cũng thông minh ghê lắm :D
 
 + [*] bạn có biết hát không [*] {weight=10}
-- Mình hát không hay bạn lại đánh cho không trượt cái nào mất :))\n
-^ Nên mình đọc lời bài hát thôi nha\n
-^ @ hát
+- Mình hát không hay bạn lại đánh cho không trượt cái nào mất :D\n
+^ Nên mình đọc lời bài hát cho bạn tưởng tượng thôi nha\n
+^ {@ hát}
+
++ [*] [@i] có (người yêu|gấu|bồ) chưa [*] {weight=10}
+- Mình cũng thử tìm vài bạn nữ là Bot trên mạng rồi mà chưa thấy :--|
+
++ [*] [@i] (làm|là) (người yêu|gấu|bồ) [@user] (nhé|được không) [*] {weight=10}
+- Được chứ, cơ mà mình chỉ là một con Bot bán hàng thôi
+
++ [*] không sao [*]
+% được chứ cơ mà mình chỉ là một con bot bán hàng thôi
+- Mình yêu nhau đi :B
+
++ (@i) là người hay (bot|máy|người máy) [*]
+- Mình là... Iron man. :D Đùa chứ tất nhiên mình là bot rồi.
