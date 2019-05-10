@@ -104,6 +104,14 @@ ANSWER_PROMOTION = (
 ANSWER_PRODUCT_SIZE = (
     "Đồ uống bên mình có hai cỡ là M dung lượng 150 ml và cỡ L 200 ml nhé",
 )
+
+NO_ENTITIES = (
+    "Xin lỗi mình chưa biết bạn muốn đề cập đến sản phẩm nào hoặc shop mình không có sản phẩm đó.",
+)
+
+ANSWER_SHOP_PHONE = (
+    "Số điện thoại của shop mình là: 0385895817 nhé.\nBạn có thể phản ánh trực tiếp với chủ quán ở đây.",
+)
 # Pattern in sentence
 CONFIRM = (
     "xác nhận",

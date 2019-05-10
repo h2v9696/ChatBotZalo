@@ -11,7 +11,7 @@ class BotManager:
       self.ner = NeuroNER(parameters_filepath = "ner/src/parameters.ini",
                                         train_model = _isTrain,
                                         use_pretrained_model = not _isTrain,
-                                        pretrained_model_folder = "ner/trained_models/vi_2019-05-09")
+                                        pretrained_model_folder = "ner/trained_models/vi_2019-04-22")
       self.isTrain = _isTrain
       f = open("ner/data/dic_location", "r")
       self.location_dict = f.readlines()

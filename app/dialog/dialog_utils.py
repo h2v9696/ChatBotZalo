@@ -51,7 +51,8 @@ def create_dialog(user_id):
           "entities": []
         },
         "responses": {},
-        "variable": {}
+        "variable": {},
+        "failTimes": 0
     })
 
     return dialog
@@ -123,7 +124,7 @@ def __set_entities_parent(entities: list):
             break
       if (index > 0):
         i = index - 1
-        while ((entities[i]['label'] == 'QUANTITY' or entities[i]['label'] == 'SIZE' or entities[i]['label'] == 'TOPPING'
+        while ((entities[i]['label'] == 'QUANTITY' or entities[i]['label'] == 'REFERENCE' or entities[i]['label'] == 'SIZE' or entities[i]['label'] == 'TOPPING'
           or entities[i]['label'] == 'ADJUSTICE' or entities[i]['label'] == 'ADJUSTSUGAR') and entities[i]['parent'] == ''):
           entities[i]['parent'] = entity['value']
           i -= 1

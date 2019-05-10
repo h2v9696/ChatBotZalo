@@ -5,7 +5,7 @@ from app.dialog.handle_intent import HandleIntent
 from app.dialog.handle_state import HandleState
 from app.dialog.const import START_STATE, ORDER_INTENT, ORDERING_STATE, EXIST_INTENT, SENTIMENT_INTENT, \
   ASK_PRICE_INTENT, ASK_TIME_INTENT, ASK_LOC_INTENT, YESNO_PRODUCT_INTENT, YESNO_SHIP_INTENT, \
-  PROMOTION_INTENT, ASK_PRODUCT_SIZE_INTENT
+  PROMOTION_INTENT, ASK_PRODUCT_SIZE_INTENT, ASK_PHONE_INTENT
 import json
 import app.utils.utils_zalo as utils_zalo
 from app.utils.sentences import WAIT_PROCESS_ORDER
@@ -50,7 +50,7 @@ class HandleMessage:
       }
     if (response['reply'] == "None"):
       intents, entities = self.nlpBot.bot_process(user_msg)
-      print("\nIntent, entities: ", intents, "\n", json.dumps(entities, indent = 2, ensure_ascii = False))
+      # print("\nIntent, entities: ", intents, "\n", json.dumps(entities, indent = 2, ensure_ascii = False))
 
       # print(intents, entities)
       intent = self.convert_intents(intents)
@@ -59,13 +59,13 @@ class HandleMessage:
       entities = self.convert_entities(entities)
       # print("\nUpdated intent, entities: ", intent, entities)
       update_snips(dialog = dialog, msg = user_msg, intent = intent, entities = entities)
-      print("\nUpdated dialog: ", json.dumps(dialog, indent = 2, ensure_ascii = False))
+      # print("\nUpdated dialog: ", json.dumps(dialog, indent = 2, ensure_ascii = False))
 
       #Check if dialog is in some state
-      dialog_state = self.handle_state.handle_state(dialog)
-      if dialog_state:
-        return dialog_state
       try:
+        dialog_state = self.handle_state.handle_state(dialog)
+        if dialog_state:
+          return dialog_state
         dialog = self.handle_intent.handle_intent(dialog)
       except Exception as e:
         print("Unexpected exception getting a reply: {}".format(e))
@@ -116,6 +116,8 @@ class HandleMessage:
       return ASK_TIME_INTENT
     if (question_type == "attribute" and domain == 'shop' and question_attr == 'location'):
       return ASK_LOC_INTENT
+    if (question_type == "attribute" and domain == 'shop' and question_attr == 'phone'):
+      return ASK_PHONE_INTENT
     if (question_type == "yesno" and domain == 'product'):
       return YESNO_PRODUCT_INTENT
     if (question_type == "yesno" and domain == 'ship'):

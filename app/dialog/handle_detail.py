@@ -1,11 +1,12 @@
 import app.api.zalo_api as zaloAPI
 import app.utils.utils_zalo as utils_zalo
+import re
 from app.dialog.dialog_utils import *
 from app.dialog.const import START_STATE, ORDERED_STATE, ORDERING_STATE, \
                                                 ORDERING_STATE_ADD, ORDERING_STATE_SWAP, ORDERING_STATE_DEC, \
                                                 ORDERING_STATE_NOTE, ASK_PRICE_INTENT, ASKING_PRICE_STATE, \
                                                 ASK_TIME_INTENT, ASK_LOC_INTENT, YESNO_SHIP_INTENT, PROMOTION_INTENT, \
-                                                ASK_PRODUCT_SIZE_INTENT
+                                                ASK_PRODUCT_SIZE_INTENT, ASK_PHONE_INTENT
 from app.utils.sentences import CONFIRM, REFUSE, CHANGE, ADD, DEC, SWAP, ASK_FOR_MORE_INFO, ASK_FOR_ONE_INFO, \
   CREATED_ORDER, SORRY_FOR_ERROR_CREATE_ORDER, SORRY_FOR_ERROR, \
   ASK_FOR_CHANGE_INFO, ASK_FOR_ADD_INFO, WAIT_FIX_ORDER, CANCELED_ORDER, \
@@ -13,7 +14,7 @@ from app.utils.sentences import CONFIRM, REFUSE, CHANGE, ADD, DEC, SWAP, ASK_FOR
   PRODUCT_NOT_IN_ORDER, ASK_FOR_MORE_NOTE, GET_REFUSE, ADD_MORE_NOTE_RESPONSE, \
   SORRY_CAUSE_PRODUCT_OUT_STOCK, BAD, NOT_BAD, SORRY_FOR_BAD_REPORT, CALL_BOSS, THANKS, YES, \
   WAIT_PROCESS_ORDER, ANSWER_SHOP_TIME, ANSWER_SHOP_LOC, ANSWER_YESNO_SHIP, OTHER, \
-  ANSWER_PROMOTION, ANSWER_PRODUCT_SIZE
+  ANSWER_PROMOTION, ANSWER_PRODUCT_SIZE, NO_ENTITIES, ANSWER_SHOP_PHONE
 from app.utils.sentence_utils import *
 import json
 
@@ -29,24 +30,34 @@ class HandleDetail:
     :return dialog with new response:
     """
     isNewEntities = True
-    if (get_state(dialog) == START_STATE or len(dialog['snips']['entities']) == 1):
-      entities = dialog['snips']['entities'][0]
+    entities = []
+
+    if len(dialog['snips']['entities']) > 0:
+      if (get_state(dialog) == START_STATE or len(dialog['snips']['entities']) == 1):
+        entities = dialog['snips']['entities'][0]
+      else:
+        isNewEntities = False
+        entities = dialog['snips']['entities'].pop(0)
     else:
-      isNewEntities = False
-      entities = dialog['snips']['entities'].pop(0)
+      response = {
+        "reply_type": "reply_text",
+        "reply": get_random_reply(replies = NO_ENTITIES)
+      }
+      dialog = set_response(dialog = dialog, response = response)
+      return dialog
 
     if not isNewEntities and len(dialog['snips']['entities']) > 0:
       old_entities = dialog['snips']['entities'][0]
-
+# Check if changing the order
     if (len(entities) > 0):
       if get_state(dialog) == ORDERING_STATE_ADD:
         # Add more 'TYPE'
-        print("\nAdding section\n")
+        # print("\nAdding section\n")
         if not isNewEntities:
           dialog = update_entities(dialog = dialog, entities = entities)
           entities = []
       elif get_state(dialog) == ORDERING_STATE_SWAP:
-        print("\nChanging section\n")
+        # print("\nChanging section\n")
         isProductExist = False
         for index, entity in enumerate(entities):
           if (entity['label'] == "TYPE"):
@@ -76,7 +87,7 @@ class HandleDetail:
           dialog = set_response(dialog = dialog, response = response)
           return dialog
       elif get_state(dialog) == ORDERING_STATE_DEC:
-        print("\nDecrease section\n")
+        # print("\nDecrease section\n")
         isProductExist = False
 
         o_index = 0
@@ -110,9 +121,33 @@ class HandleDetail:
 
     if (len(entities) > 0 and not isNewEntities):
       dialog = update_entities(dialog = dialog, entities = entities)
-    # Check missing entities
+
+#Check if no TYPE then fail
+    isNoType = True
+    for entity in dialog['snips']['entities'][0]:
+      if (entity['label'] == 'TYPE'):
+        isNoType = False
+        break
+    if isNoType:
+      response = {
+        "reply_type": "reply_text",
+        "reply": get_random_reply(replies = ASK_CAUSE_NO_PRODUCT)
+      }
+      dialog = set_response(dialog = dialog, response = response)
+      dialog = set_state(dialog = dialog, state = START_STATE)
+      return dialog
+# Check missing entities
     missing_entities = check_missing_entity(dialog, state)
     if len(missing_entities) > 0:
+      if check_sentence_in_group(sentence = dialog["snips"]["sentence"], group = REFUSE):
+        reply = get_random_reply(replies = GET_REFUSE)
+        response = {
+          "reply_type": "reply_text",
+          "reply": reply
+        }
+        dialog = set_state(dialog = dialog, state = START_STATE)
+        dialog = set_response(dialog = dialog, response = response)
+        return dialog
       if len(missing_entities) == 1:
         reply = get_random_reply(replies = ASK_FOR_ONE_INFO)
       else:
@@ -179,7 +214,7 @@ class HandleDetail:
     else:
       result = get_random_reply(replies = CANCELED_ORDER)
 
-      # End order change state to begin
+# End order change state to begin
       dialog = set_state(dialog = dialog, state = START_STATE)
       # Clear entities variable
       response = {
@@ -253,7 +288,7 @@ class HandleDetail:
         isNewEntities = False
         entities = dialog['snips']['entities'].pop(0)
     else:
-      reply = "Xin lỗi mình chưa biết bạn muốn đề cập đến sản phẩm nào?"
+      reply = get_random_reply(replies = NO_ENTITIES)
 
     all_products = zaloAPI.get_products(False)
     for e in entities:
@@ -302,6 +337,7 @@ class HandleDetail:
         YESNO_SHIP_INTENT: get_random_reply(replies = ANSWER_YESNO_SHIP),
         PROMOTION_INTENT: get_random_reply(replies = ANSWER_PROMOTION) + zaloAPI.get_sale_products(isIntent = True),
         ASK_PRODUCT_SIZE_INTENT: get_random_reply(replies = ANSWER_PRODUCT_SIZE),
+        ASK_PHONE_INTENT: get_random_reply(replies = ANSWER_SHOP_PHONE),
     }
     print(switcher, dialog["snips"]["intent"], '\n')
     reply = switcher.get(dialog["snips"]["intent"], get_random_reply(replies = OTHER))
@@ -334,7 +370,7 @@ class HandleDetail:
           reply += "Sản phẩm " + e['value'] + " không tồn tại, hoặc đã hết hàng, xin bạn vui lòng quay lại sau nhé.\n"
 
     if not entities:
-      reply = "Xin lỗi mình chưa biết bạn muốn đề cập đến sản phẩm nào?"
+      reply = get_random_reply(replies = NO_ENTITIES)
 
     dialog = set_state(dialog = dialog, state = START_STATE)
     response = {
@@ -427,9 +463,14 @@ class HandleDetail:
             }
           }
           # Get product 'QUANTITY' if dont have 'QUANTITY' before that then default = 1
-          if (index != 0):
-            if (entities[index - 1]['label'] == 'QUANTITY' and entities[index - 1]['value'].isnumeric()):
-              item['quantity'] = int(entities[index - 1]['value'])
+          if (index > 0):
+            i = index - 1
+            while (entities[i]['parent'] == e['value']):
+              if (entities[i]['label'] == 'QUANTITY'):
+                item['quantity'] = int(re.findall(r'\d+', entities[i]['value'])[0])
+              i -= 1
+              if (i < 0):
+                break
           # Get type to product name
           item['product_name'] = e['value']
           # Get 'SIZE' 'TOPPING' 'ADJUSTICE' 'ADJUSTSUGAR' behind TYPE

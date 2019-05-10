@@ -39,6 +39,17 @@ def reply_user_link(user_id, links: list):
   print("\nReply user by link: ", send_link_message)
   # return links
 
+def reply_user_sticker(user_id, sticker_id: str):
+  data = {
+    'uid': user_id,
+    'stickerid': sticker_id
+  }
+  params = {'data': data}
+  send_sticker_message = zalo_oa_client.post('sendmessage/sticker', params)
+  print("\nReply user by sticker: ", send_sticker_message)
+  # return msg
+
+
 def reply_user_select(user_id, msg: str, sub_msg: str, img_url: str):
   message_info = {
     'recipient': {

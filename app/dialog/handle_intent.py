@@ -1,10 +1,10 @@
 from app.dialog.handle_detail import HandleDetail
-from app.utils.sentences import OTHER
+from app.utils.sentences import OTHER, CALL_BOSS
 from app.utils.sentence_utils import *
 from app.dialog.dialog_utils import *
 from app.dialog.const import ORDER_INTENT, EXIST_INTENT, SENTIMENT_INTENT, ASK_PRICE_INTENT, \
   ASK_TIME_INTENT, ASK_LOC_INTENT, YESNO_PRODUCT_INTENT, YESNO_SHIP_INTENT, PROMOTION_INTENT, \
-  ASK_PRODUCT_SIZE_INTENT
+  ASK_PRODUCT_SIZE_INTENT, START_STATE, ASK_PHONE_INTENT
 
 class HandleIntent:
   def __init__(self):
@@ -27,17 +27,28 @@ class HandleIntent:
         ASK_LOC_INTENT: self.__handle_ask_simple_answer,
         YESNO_SHIP_INTENT: self.__handle_ask_simple_answer,
         PROMOTION_INTENT: self.__handle_ask_simple_answer,
+        ASK_PHONE_INTENT: self.__handle_ask_simple_answer,
         ASK_PRODUCT_SIZE_INTENT: self.__handle_ask_simple_answer,
         YESNO_PRODUCT_INTENT: self.__handle_yesno_product,
       }
       if (_intent in functions):
         return functions[_intent](intent = _intent, dialog = _dialog)
 
+      if (_dialog['failTimes'] < 2):
+        reply = get_random_reply(replies = OTHER)
+      else:
+        reply = get_random_reply(replies = CALL_BOSS)
+        _dialog['failTimes'] = 0
+
       # If dont get user intent then reply OTHER
       response = {
         "reply_type": "reply_text",
-        "reply": get_random_reply(replies = OTHER)
+        "reply": reply
       }
+      if get_state(dialog = _dialog) == START_STATE:
+        _dialog['failTimes'] += 1
+      else:
+        _dialog['failTimes'] = 0
       _dialog = set_response(dialog = _dialog, response = response)
       return _dialog
 

@@ -72,7 +72,7 @@
 // CONFIRM
 // =================================================
 
-+ [*] (vậy hả|thật sao) [*]
++ [*] (vậy hả|thật sao|thật không|thật hả) [*]
 - Có thể đúng... hoặc sai{weight=2}
 - Thật đó
 

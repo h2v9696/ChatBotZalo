@@ -38,7 +38,7 @@
 + [*] @shop bán gì [*]
 @ xin cái menu
 
-+ [*] @shop [*] bán [*] gì [*]
++ [*] @shop [*] bán [*] (gì|không) [*]
 @ xin cái menu
 
 > object get_menu python
