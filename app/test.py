@@ -201,7 +201,29 @@ def __except_key(d: dict, keys: list):
 def __swap_product(new_entities, old_entities):
   return old_entities
 
+def convert_quantity(quantity: str):
+  if quantity:
+    switcher = {
+      "một": "1",
+      "hai": "2",
+      "ba": "3",
+      "bốn": "4",
+      "năm": "5",
+      "sáu": "6",
+      "bảy": "7",
+      "bẩy": "7",
+      "tám": "8",
+      "chín": "9",
+      "mười": "10",
+    }
+    print(switcher, quantity, switcher.get(quantity, quantity))
+    reply = switcher.get(quantity, quantity)
+    return switcher.get(quantity, quantity)
+
 if __name__ == '__main__':
+# Test convert quantity
+
+  print(convert_quantity(quantity = "một"))
 # Test swap product
   entities = [
     {
@@ -253,28 +275,28 @@ if __name__ == '__main__':
   #     else:
   #       index += 1
 
-  print("\nDecrease section\n")
+  # print("\nDecrease section\n")
   isProductExist = False
 
   o_index = 0
   while (o_index < len(old_entities)):
     o_entity = old_entities[o_index]
-    print (o_index, o_entity, '\n')
+    # print (o_index, o_entity, '\n')
     if (o_entity['label'] == "TYPE"):
       if o_entity in entities:
         isProductExist = True
-        print(old_entities.pop(o_index), '\n')
+        # print(old_entities.pop(o_index), '\n')
         o_index -= 1
         i = 0
         while (i < len(old_entities)):
           e = old_entities[i]
           if (e["parent"] == o_entity['value']):
-            print(old_entities.pop(i), '\n')
+            # print(old_entities.pop(i), '\n')
             i -=1
           i += 1
     o_index += 1
 
-  print("\nUpdated entities: ", json.dumps(old_entities, indent=2, ensure_ascii = False))
+  # print("\nUpdated entities: ", json.dumps(old_entities, indent=2, ensure_ascii = False))
 
 
 # Test merge product

@@ -339,7 +339,7 @@ class HandleDetail:
         ASK_PRODUCT_SIZE_INTENT: get_random_reply(replies = ANSWER_PRODUCT_SIZE),
         ASK_PHONE_INTENT: get_random_reply(replies = ANSWER_SHOP_PHONE),
     }
-    print(switcher, dialog["snips"]["intent"], '\n')
+    # print(switcher, dialog["snips"]["intent"], '\n')
     reply = switcher.get(dialog["snips"]["intent"], get_random_reply(replies = OTHER))
 
     dialog = set_state(dialog = dialog, state = START_STATE)
@@ -467,7 +467,15 @@ class HandleDetail:
             i = index - 1
             while (entities[i]['parent'] == e['value']):
               if (entities[i]['label'] == 'QUANTITY'):
-                item['quantity'] = int(re.findall(r'\d+', entities[i]['value'])[0])
+                quantity = utils_zalo.convert_quantity(entities[i]['value'])
+                number_quantity = re.findall(r'\d+', entities[i]['value'])
+                if len(number_quantity) > 0:
+                  item['quantity'] = int(number_quantity[0])
+                elif quantity:
+                  item['quantity'] = int(quantity)
+                else:
+                  item['quantity'] = int(entities[i]['value'])
+
               i -= 1
               if (i < 0):
                 break
@@ -559,7 +567,7 @@ class HandleDetail:
           if item['variation']['id'] == '':
             item['variation']['id'] = utils_zalo.convert_id_size(id_or_size = 'm')
           quantity = utils_zalo.get_sum_quantity_in_product(product = product, size_id = item['variation']['id'])
-          # print(quantity)
+          # print(quantity, item["quantity"])
           if (quantity - item["quantity"] < 0):
             zaloAPI.reply_user_text(dialog['user_id'], "Sản phẩm: " + product['name'] + " - Size: " + utils_zalo.convert_id_size(id_or_size = item['variation']['id']).upper() + (" chỉ còn " + str(quantity) + " đơn vị" if (quantity > 0) else " đã hết hàng"))
             dialog = self.__handle_product_out_stock(dialog = dialog, state = ORDERING_STATE_ADD, product = product)
@@ -669,7 +677,7 @@ class HandleDetail:
       if key['label'] == label and key['parent'] == parent:
         result = entities.pop(index)
     if result:
-      print("\nResult entities: ", json.dumps(result, indent = 2, ensure_ascii = False))
+      # print("\nResult entities: ", json.dumps(result, indent = 2, ensure_ascii = False))
       found_index = -1
       for index, key in enumerate(old_entities):
         if key['label'] == "TYPE":

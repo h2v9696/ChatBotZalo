@@ -135,3 +135,21 @@ def check_sale_product(product):
   if product['name'].lower() in SALE_PRODUCTS:
     product['sale'] = SALE_PRODUCTS[product['name'].lower()]
   return product
+
+def convert_quantity(quantity: str):
+  if quantity:
+    switcher = {
+      "một": "1",
+      "hai": "2",
+      "ba": "3",
+      "bốn": "4",
+      "năm": "5",
+      "sáu": "6",
+      "bảy": "7",
+      "bẩy": "7",
+      "tám": "8",
+      "chín": "9",
+      "mười": "10",
+    }
+    return switcher.get(quantity, quantity)
+  return None
