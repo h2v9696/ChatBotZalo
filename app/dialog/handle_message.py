@@ -50,7 +50,7 @@ class HandleMessage:
       }
     if (response['reply'] == "None"):
       intents, entities = self.nlpBot.bot_process(user_msg)
-      # print("\nIntent, entities: ", intents, "\n", json.dumps(entities, indent = 2, ensure_ascii = False))
+      print("\nIntent, entities: ", intents, "\n", json.dumps(entities, indent = 2, ensure_ascii = False))
 
       # print(intents, entities)
       intent = self.convert_intents(intents)
@@ -59,7 +59,7 @@ class HandleMessage:
       entities = self.convert_entities(entities)
       # print("\nUpdated intent, entities: ", intent, entities)
       update_snips(dialog = dialog, msg = user_msg, intent = intent, entities = entities)
-      # print("\nUpdated dialog: ", json.dumps(dialog, indent = 2, ensure_ascii = False))
+      print("\nUpdated dialog: ", json.dumps(dialog, indent = 2, ensure_ascii = False))
 
       #Check if dialog is in some state
       try:

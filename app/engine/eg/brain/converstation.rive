@@ -29,8 +29,7 @@
 + (chào|xin chào|hi|hello|hey|howdy|hola|yo) [*]
 * <get name> != undefined => Chào <get name><set greeting=true>. Bạn muốn mình giúp gì không?
 - Chào bạn<set greeting=true>. Bạn muốn mình giúp gì không?
-- Chào mừng bạn đến ViTea. Mình là bot của cửa hàng.
-^  Mình có thể giúp bạn được gì không?
+- Chào mừng bạn đến ViTea. Mình là bot của cửa hàng.\nMình có thể giúp bạn được gì không?
 
 + [*] @yes [*]
 % chào bạn bạn muốn mình giúp gì không

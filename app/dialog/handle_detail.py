@@ -31,6 +31,7 @@ class HandleDetail:
     """
     isNewEntities = True
     entities = []
+    old_entities = []
 
     if len(dialog['snips']['entities']) > 0:
       if (get_state(dialog) == START_STATE or len(dialog['snips']['entities']) == 1):
