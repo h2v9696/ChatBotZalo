@@ -58,7 +58,7 @@ class HandleDetail:
           dialog = update_entities(dialog = dialog, entities = entities)
           entities = []
       elif get_state(dialog) == ORDERING_STATE_SWAP:
-        # print("\nChanging section\n")
+        # print("\nChanging section\n", entities)
         isProductExist = False
         for index, entity in enumerate(entities):
           if (entity['label'] == "TYPE"):
@@ -79,7 +79,7 @@ class HandleDetail:
               last = entities.pop(index)
               dialog = update_entities(dialog = dialog, entities = entities, last_entity = last)
               isProductExist = True
-          entities = []
+        entities = []
         if not isProductExist:
           response = {
             "reply_type": "reply_text",

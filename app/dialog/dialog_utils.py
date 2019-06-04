@@ -149,9 +149,9 @@ def update_entities(dialog: dict, entities: list, last_entity: dict = None):
     is_new = True
     for old_entity in old_entities:
       if (current_state == ORDERING_STATE_SWAP and old_entity["label"] == new_entity["label"]):
-        print(last_entity, old_entity, new_entity, '\n')
+        # print(last_entity, old_entity, new_entity, '\n')
         if (last_entity != None and old_entity["value"] == last_entity["value"]):
-          print("WAT")
+          # print("WAT")
           old_entity["value"] = new_entity["value"]
           is_new = False
           if (old_entity["label"] == "TYPE"):
