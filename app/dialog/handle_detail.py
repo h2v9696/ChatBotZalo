@@ -666,7 +666,7 @@ class HandleDetail:
 
   def __check_exist_product_in_order(self, product_name: str, old_entities: list):
     for entity in old_entities:
-      if (product_name in entity['value']):
+      if (entity['value'] in product_name):
         return True
     return False
 
