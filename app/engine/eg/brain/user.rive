@@ -1,0 +1,97 @@
+// =====================================================================
+// Học và trả lời thông tin từ người dùng
+// Author: Hoàng Việt
+// Date: 7/2018
+// =====================================================================
+
+// =================================================
+// USER_NAME
+// =================================================
+
++ tôi [tên] là *
+- <set name=<formal>>Chào <get name>.
+- <set name=<formal>>Rất vui được gặp <get name>.
+
++ tôi [tên] là <bot name>
+- <set name=<bot name>>Trùng hợp vậy! Mình cũng tên là <get name>
+- <set name=<bot name>>Đó cũng là tên cũng mình đó!
+
++ [*] (tôi tên là gì|tên tôi là gì|tôi là ai){weight=50}
+* <get name> == undefined => Bạn chưa nói tên mà! Tên bạn là gì?
+- Tên bạn là <get name>.
+- Mình nhớ bạn bảo bạn là <get name>.
+- Không phải bạn là <get name> sao?
+
++ [*] tôi không biết
+% bạn chưa nói tên mà tên bạn là gì
+- Tên mình mà không biết? Bạn vui tính nhỉ :D{topic=random}
+
+// =================================================
+// AGE
+// =================================================
+
++ tôi * tuổi
+* <star> == <bot age> => <set age=<star>>Mình cùng tuổi nhau nè!
+- <set age=<star>>Bạn <get age> tuổi, mình nhớ rồi!
+- <set age=<star>>Còn mình <bot age> tuổi rồi đó.{weight=49}
+
++ [*] (tôi mấy tuổi|bạn có biết tuổi của tôi không| tôi bao nhiêu tuổi) [?]{weight=10}
+* <get age> == undefined => Bạn chưa nói tuổi mà! Bạn bao nhiêu tuổi?
+- Bạn <get age> tuổi.
+
++ [*] tôi không biết
+% bạn chưa nói tuổi bạn bao nhiêu tuổi
+- Tuổi mình mà không biết? Bạn vui tính nhỉ :D{topic=random}
+
+// =================================================
+// SEX
+// =================================================
+
++ tôi là (@male|@female)
+- <set sex=<star>>Bạn là <star>, đã nhớ.
+
++ tôi là (@male) hay [là] (@female) [?]
+* <get sex> == undefined => Mình cũng không rõ... Nam, nữ hay cả hai nhỉ :D
+- Bạn là <get sex>.
+
+// =================================================
+// OTHER
+// =================================================
+
++ tôi (đến từ|sống ở|ở|là người) *
+- <set location={formal}<star2>{/formal}>Người ở <get location> mình cũng nói chuyện nhiều rồi!
+
++ * mà tôi thích là *
+- <set fav<star1>=<star2>>Tại sao bạn thích nó?
+
++ *
+% tại sao bạn thích nó
+- Mình hiểu rồi.
+
++ tôi [*] (fa|độc thân|không có gấu)
+- <set status=single><set spouse=nobody>Mình cũng vậy, chắc tại mình là bot :/
+
++ tôi có bạn gái
+- <set status=girlfriend>Tên cô ấy là gì?
+
++ tôi có bạn trai
+- <set status=boyfriend>Tên anh ấy là gì?
+
++ *
+% tên cô ấy là gì
+- <set spouse=<formal>>Tên dễ thương chắc người cũng dễ thương nhỉ :D
+
++ *
+% tên anh ấy là gì?
+- <set spouse=<formal>>Tên ngầu đó!
+
++ tên (bạn gái|bạn trai|người yêu) [của] tôi là *
+- <set spouse=<formal>>Tên đẹp đó!
+
++ * là (bạn gái|bạn trai|người yêu) [của] tôi
+- <set spouse=<formal>>Tên đẹp đó!
+
++ ai là (bạn gái|bạn trai|người yêu) của tôi{weight=10}
+* <get spouse> == undefined => Mình không biết.
+* <get status> == single => Mình nhớ bạn độc thân mà nhỉ?
+- <get spouse>
