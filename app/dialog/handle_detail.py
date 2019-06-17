@@ -596,12 +596,12 @@ class HandleDetail:
           for v in product['variations']:
             if v['attributes'][0] == item['variation']['id']:
               item['variation']['id'] = v['id']
-              total_price += int(v['price']) * item["quantity"]
+              total_price += int(v['price']) * item["quantity"] * (1 - sale)
               order_confirm += str(int(v['price'] * item["quantity"] * (1 - sale))) + " đ\n"
         else:
           if "variation" in item:
             del item["variation"]
-          total_price += int(product['price']) * item["quantity"]
+          total_price += int(product['price']) * item["quantity"] * (1 - sale)
           order_confirm += str(int(product['price'] * item["quantity"] * (1 - sale))) + " đ\n"
         p_index += 1
         item['product_id'] = product["id"]
@@ -620,7 +620,7 @@ class HandleDetail:
         zaloAPI.reply_user_text(dialog['user_id'], get_random_reply(replies = ASK_FOR_CONFIRM))
 
       # print(order)
-      order_confirm += "Tổng giá: " + str(int(total_price * (1 - sale))) + " đ"
+      order_confirm += "Tổng giá: " + str(int(total_price)) + " đ"
       if (get_state(dialog = dialog) != ASKING_PRICE_STATE):
         order_confirm += "\nGhi chú: " + order['extra_note']
       # Confirm order

@@ -25,6 +25,7 @@ class ClassifierModel(object):
         clfLR = LogisticRegression(solver='sag');
         clfNB = MultinomialNB(fit_prior=True, class_prior=None);
         clfSGD = SGDClassifier(loss='log', penalty='l2', alpha=1e-3, n_iter=5, random_state=None);
+        clfVoting = VotingClassifier(estimators=[('svc', clfSVC), ('lr', clfLR)], voting='soft', weights=[1,1]);
         # param_dist = {"max_depth": [3, None],                  #distribution
         #       "n_estimators":[50,100,200,300,400,500],
         #       "max_features": sp_randint(1, 11),
@@ -36,7 +37,6 @@ class ClassifierModel(object):
         pipe_line = Pipeline([
             ("transformer", FeatureTransformer()),
             ("vect", CountVectorizer()),
-            ("tfidf", TfidfTransformer()),
             # ('clf', RandomizedSearchCV( estimator=RandomForestClassifier(random_state=0),
             #     param_distributions=param_dist,
             #     cv=3,              #CV
@@ -46,7 +46,7 @@ class ClassifierModel(object):
             #     verbose=0,
             #     random_state=1))
 
-            ('clf', VotingClassifier(estimators=[('svc', clfSVC), ('lr', clfLR), ('onb', clfNB), ('sgd', clfSGD)], voting='soft', weights=[4,4,1,1])),
+            ('clf', clfVoting),
             # ('clf', AdaBoostClassifier(SVC(probability=True, kernel='linear'), n_estimators=5, learning_rate=1.0, algorithm='SAMME')),
             # ('clfSVC', CalibratedClassifierCV(OneVsRestClassifier(LinearSVC(), n_jobs=1))),
             # ('clfLR', OneVsRestClassifier(LogisticRegression(solver='sag'), n_jobs=1)),

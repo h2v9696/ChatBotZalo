@@ -160,7 +160,7 @@
 + [*] tác giả bạn thích [*]
 - <bot author>.
 
-+ [*] bạn có (thông minh|giỏi) bằng <star> [không] [*]
++ [*] bạn có (thông minh|giỏi) bằng <star> [không] [*] {weight=10}
 - Mình làm sao mà kém dăm ba <star> được.\n
 ^ Nhưng dạo này nhiều <star> cũng thông minh ghê lắm :D
 
@@ -179,8 +179,17 @@
 % được chứ cơ mà mình chỉ là một con bot bán hàng thôi
 - Mình yêu nhau đi :B
 
-+ (@i) là người hay (bot|máy|người máy) [*]
++ [*] (@i) là người hay [là] (bot|máy|người máy) [*]
 - Mình là... Iron man. :D Đùa chứ tất nhiên mình là bot rồi.
 
-+ [*] (kinh|siêu|giỏi|thông minh|tuyệt|hay|ghê) (đấy|nhỉ) [*]
++ [*] (kinh|siêu|giỏi|thông minh|tuyệt|hay|ghê) (đấy|nhỉ|quá) [*]
 - Cảm ơn bạn đã quá khen :D
+
++ [*] thời tiết [*]
+- Mình sẽ hỏi chị Google về cách xem thời tiết sau nhé :D
+
++ [*] siri [*]
+- Mình tuy vẫn chưa thể bằng được chị Siri, nhưng mình sẽ cố gắng :D
+
++ [*] (google assistant|chị google|google) [*]
+- Mình tuy vẫn chưa thể bằng được chị Google, nhưng mình sẽ cố gắng :D
